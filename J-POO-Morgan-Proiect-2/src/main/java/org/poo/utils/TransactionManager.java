@@ -27,7 +27,8 @@ public final class TransactionManager {
                  Constants.DELETE_ACCOUNT_FAIL_TRANSACTION,
                  Constants.CHECK_CARD_TRANSACTION,
                  Constants.MIN_AGE_TRANSACTION,
-                 Constants.PLAN_ALREADY_TRANSACTION:
+                 Constants.PLAN_ALREADY_TRANSACTION,
+                 Constants.DONT_HAVE_CLASSIC_TRANSACTION:
                 transaction = new Transaction(datesForTransaction.getTimestamp(),
                         datesForTransaction.getDescription());
                 transaction.addToUserHistory(datesForTransaction.getUserEmail());
@@ -92,6 +93,18 @@ public final class TransactionManager {
                         datesForTransaction.getTimestamp(), datesForTransaction.getIban(),
                         datesForTransaction.getNewPlanType());
                 transaction.addToUserHistory(datesForTransaction.getUserEmail());
+                break;
+            case Constants.CASH_WITHDRAWAL_TRANSACTION:
+                transaction = new CashWithdrawal(datesForTransaction.getDescription(),
+                        datesForTransaction.getTimestamp(), datesForTransaction.getAmount());
+                transaction.addToUserHistory(datesForTransaction.getUserEmail());
+                break;
+            case Constants.INTEREST_RATE_TRANSACTION:
+                transaction = new InterestRate(datesForTransaction.getDescription(),
+                        datesForTransaction.getTimestamp(), datesForTransaction.getAmount(),
+                        datesForTransaction.getCurrency());
+                transaction.addToUserHistory(datesForTransaction.getUserEmail());
+                break;
             default:
                 break;
         }

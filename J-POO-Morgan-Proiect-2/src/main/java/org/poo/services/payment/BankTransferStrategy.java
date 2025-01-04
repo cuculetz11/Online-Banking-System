@@ -3,9 +3,12 @@ package org.poo.services.payment;
 import org.poo.entities.Bank;
 import org.poo.entities.CurrencyPair;
 import org.poo.entities.bankAccount.Account;
+import org.poo.entities.commerciant.Commerciant;
 import org.poo.fileio.CommandInput;
+import org.poo.services.cashbackService.CashBackContext;
 import org.poo.utils.Constants;
 import org.poo.utils.DatesForTransaction;
+import org.poo.utils.ErrorManager;
 import org.poo.utils.TransactionManager;
 
 public class BankTransferStrategy implements PaymentStrategy {
@@ -21,11 +24,13 @@ public class BankTransferStrategy implements PaymentStrategy {
         try {
             Account senderAccount = Bank.getInstance().getAccounts().get(input.getAccount());
             if (senderAccount == null) {
-                throw new IllegalArgumentException("Contul nu exista: " + input.getAccount());
+                ErrorManager.notFound(Constants.USER_NOT_FOUND, input.getCommand(), input.getTimestamp());
+                return true;
             }
             Account receiverAccount = Bank.getInstance().getAccounts().get(input.getReceiver());
             if (receiverAccount == null) {
-                throw new IllegalArgumentException("Contul nu exista: " + input.getAccount());
+                ErrorManager.notFound(Constants.USER_NOT_FOUND, input.getCommand(), input.getTimestamp());
+                return true;
             }
             if (input.getAccount().chars().allMatch(Character::isLetter)) {
                 throw new IllegalArgumentException("Sender-ul nu trebuie sa fie alias: "
@@ -45,7 +50,10 @@ public class BankTransferStrategy implements PaymentStrategy {
             this.receiver = receiverAccount;
             this.sender = senderAccount;
             this.amount = input.getAmount();
-
+            if(Bank.getInstance().getCommerciants().containsKey(senderAccount.getIban())) {
+                Commerciant commerciant = Bank.getInstance().getCommerciants().get(senderAccount.getIban());
+                receiver.getUser().getPlan().setCashBackContext(new CashBackContext(commerciant, receiver, amount));
+            }
             String money = input.getAmount() + " " + sender.getCurrency();
             DatesForTransaction datesForTransactionSender =
                     new DatesForTransaction.Builder(input.getDescription(), input.getTimestamp())

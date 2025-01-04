@@ -31,4 +31,5 @@ public final class ErrorManager {
 
         JsonOutManager.getInstance().addToOutput(error);
     }
+
 }

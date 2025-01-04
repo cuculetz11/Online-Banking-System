@@ -28,12 +28,18 @@ public abstract class Account implements BalanceObserverPrecision {
     @Getter
     @JsonIgnore
     private User user;
+    @Getter
     @JsonIgnore
     private double minimumBalance;
     @Getter
     @JsonIgnore
     private ArrayList<Transaction> transactionsHistory;
+    @Getter
+    @JsonIgnore
     private HashMap<String, Double> cashback;
+    @Getter
+    @JsonIgnore
+    private HashSet<String> usedCashback;
 
     public Account(final double balance, final String currency, final String type) {
         this.iban = Utils.generateIBAN();
@@ -44,6 +50,7 @@ public abstract class Account implements BalanceObserverPrecision {
         this.minimumBalance = 0;
         this.transactionsHistory = new ArrayList<>();
         this.cashback = new HashMap<>();
+        this.usedCashback = new HashSet<>();
     }
 
     /**
@@ -65,7 +72,7 @@ public abstract class Account implements BalanceObserverPrecision {
      * @param amount suma platii
      */
     public void pay(final double amount) {
-        this.setBalance(this.getBalance() - amount - this.getUser().getPlan().getCommissionPlan().commission(amount));
+        this.setBalance(this.getBalance() - amount - this.getUser().getPlan().getCommissionPlan().commission(amount, currency));
     }
 
     /**
@@ -82,7 +89,7 @@ public abstract class Account implements BalanceObserverPrecision {
      * @return adevarat daca transferul nu e posibil, fals altfel
      */
     public boolean isTransferPossible(final double amount) {
-        return !(this.getBalance() >= (amount + this.getUser().getPlan().getCommissionPlan().commission(amount)));
+        return !(this.getBalance() >= (amount + this.getUser().getPlan().getCommissionPlan().commission(amount, currency)));
     }
 
     /**

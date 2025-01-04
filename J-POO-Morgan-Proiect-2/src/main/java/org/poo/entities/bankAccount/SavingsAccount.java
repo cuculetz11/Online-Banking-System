@@ -26,6 +26,16 @@ public class SavingsAccount extends Account {
      */
     @Override
     public void addInterest(final CommandInput input) {
+        DatesForTransaction datesForTransaction =
+                new DatesForTransaction.Builder(Constants.INTEREST_RATE_INCOME,
+                        input.getTimestamp())
+                        .transactionName(Constants.INTEREST_RATE_TRANSACTION)
+                        .userEmail(this.getUser().getEmail())
+                        .amount(this.getBalance() * this.getInterestRate())
+                        .currency(this.getCurrency())
+                        .build();
+        TransactionManager.generateAndAddTransaction(datesForTransaction);
+
         this.setBalance(this.getBalance() + this.getBalance()
                 * this.getInterestRate());
     }

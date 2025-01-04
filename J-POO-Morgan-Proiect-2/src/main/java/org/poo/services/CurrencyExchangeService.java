@@ -22,7 +22,7 @@ public class CurrencyExchangeService {
         Map<String, ArrayList<String>> currencies = Bank.getInstance().getExchangeRates()
                 .getCurrencies();
         if (rates.containsKey(currencyPair)) {
-            return Math.round((rates.get(currencyPair) * amount) * 100 ) / 100.0;
+            return rates.get(currencyPair) * amount;
         }
         HashSet<String> visited = new HashSet<>();
         exchangeCurrencyDFS(currencyPair.getFrom(), currencyPair.getTo(), visited, 1, rates,
@@ -34,8 +34,7 @@ public class CurrencyExchangeService {
             currencies.put(inverse.getFrom(), new ArrayList<>());
         }
         currencies.get(inverse.getFrom()).add(inverse.getTo());
-       double value = amount * rate;
-       return Math.round(value * 100) / 100.0;
+        return amount * rate;
     }
 
     /**

@@ -22,6 +22,7 @@ public final  class Constants {
     public static final String ADD_INTEREST = "addInterest";
     public static final String WITHDRAW_SAVINGS = "withdrawSavings";
     public static final String UPGRADE_PLAN = "upgradePlan";
+    public static final String CASH_WITHDRAWAL = "cashWithdrawal";
     //------------------------------
     public static final String COMMAND_NOT_FOUND_ERROR = "Command not found";
     public static final String ACCOUNT_NOT_FOUND = "Account not found";
@@ -47,6 +48,12 @@ public final  class Constants {
     public static final String THE_CARD_IS_FROZEN    = "The card is frozen";
     public static final String DONT_HAVE_MIN_AGE = "You don't have the minimum age required.";
     public static final String UPGRADE_PLAN_SENTENCE = "Upgrade plan";
+    public static final String SPENDING_THRESHOLD = "spendingThreshold";
+    public static final String NR_OF_TRANSACTIONS = "nrOfTransactions";
+    public static final String USER_NOT_FOUND = "User not found";
+    public static final String INTEREST_RATE_INCOME = "Interest rate income";
+    public static final String DONT_HAVE_CLASSIC = "You do not have a classic account.";
+
     //---------------------------
     public static final String ADD_ACCOUNT_TRANSACTION =
             "AddAccountTransaction";
@@ -74,9 +81,13 @@ public final  class Constants {
             "SplitPaymentTransfer";
     public static final String CHECK_CARD_TRANSACTION =
             "CheckCardTransaction";
+    public static final String CASH_WITHDRAWAL_TRANSACTION =
+            "CashWithdrawalTransaction";
     public static final String MIN_AGE_TRANSACTION = "MinAgeTransaction";
     public static final String PLAN_ALREADY_TRANSACTION = "PlanAlreadyTransaction";
     public static final String UPGRADE_PLAN_TRANSACTION = "UpgradePlanTransaction";
+    public static final String INTEREST_RATE_TRANSACTION = "InterestRateTransaction";
+    public static final String DONT_HAVE_CLASSIC_TRANSACTION = "DontHaveClassicTransaction";
 
     public static final double STANDARD_COMMISSION = 0.2;
 

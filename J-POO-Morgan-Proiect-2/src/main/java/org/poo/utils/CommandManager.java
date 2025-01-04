@@ -43,6 +43,7 @@ public final class CommandManager {
             case Constants.ADD_INTEREST -> new AddInterest();
             case Constants.WITHDRAW_SAVINGS -> new WithdrawSavings();
             case Constants.UPGRADE_PLAN -> new UpgradePlan();
+            case Constants.CASH_WITHDRAWAL -> new CashWithdrawal();
             default -> throw new IllegalArgumentException(Constants.COMMAND_NOT_FOUND_ERROR);
         };
     }

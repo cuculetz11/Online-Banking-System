@@ -1,4 +1,4 @@
-package org.poo.entities;
+package org.poo.entities.commerciant;
 
 import lombok.Getter;
 import org.poo.fileio.CommerciantInput;

@@ -25,6 +25,23 @@ public class WithdrawSavingsAction implements PaymentStrategy {
             if(this.account == null){
                 throw new IllegalArgumentException("Contul nu exitsa: " + input.getAccount());
             }
+            boolean hasClassic = false;
+            for(Account a : account.getUser().getAccounts().values()) {
+                if(a.getType().equals("classic")) {
+                    hasClassic = true;
+                    break;
+                }
+            }
+            if(!hasClassic){
+                DatesForTransaction datesForTransaction =
+                        new DatesForTransaction.Builder(Constants.DONT_HAVE_CLASSIC,
+                                input.getTimestamp())
+                                .transactionName(Constants.DONT_HAVE_CLASSIC_TRANSACTION)
+                                .userEmail(account.getUser().getEmail())
+                                .build();
+                TransactionManager.generateAndAddTransaction(datesForTransaction);
+                return true;
+            }
             if(Integer.parseInt(this.account.getUser().getBirthDate().split("-")[0]) < 2024) {
                 DatesForTransaction datesForTransaction =
                         new DatesForTransaction.Builder(Constants.DONT_HAVE_MIN_AGE,

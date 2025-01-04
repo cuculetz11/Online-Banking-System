@@ -3,9 +3,11 @@ package org.poo.services.payment;
 import org.poo.entities.Bank;
 import org.poo.entities.CurrencyPair;
 import org.poo.entities.card.Card;
+import org.poo.entities.commerciant.Commerciant;
 import org.poo.entities.transaction.CardPayment;
 import org.poo.entities.transaction.Transaction;
 import org.poo.fileio.CommandInput;
+import org.poo.services.cashbackService.CashBackContext;
 import org.poo.utils.Constants;
 import org.poo.utils.DatesForTransaction;
 import org.poo.utils.ErrorManager;
@@ -52,6 +54,11 @@ public class CardPaymentStrategy implements PaymentStrategy {
             return true;
         }
         this.amountToPay = amount;
+        Commerciant commerciant = Bank.getInstance().getCommerciants().get(input.getCommerciant());
+
+        card.getAccount().getUser().getPlan().setCashBackContext(new CashBackContext(commerciant, card.getAccount(), amountToPay));
+        card.getAccount().getUser().getPlan().checkUpdate(amount,card.getAccount().getCurrency());
+
         DatesForTransaction datesForTransaction =
                 new DatesForTransaction.Builder(Constants.CARD_PAYMENT, input.getTimestamp())
                         .transactionName(Constants.CARD_PAYMENT_TRANSACTION)

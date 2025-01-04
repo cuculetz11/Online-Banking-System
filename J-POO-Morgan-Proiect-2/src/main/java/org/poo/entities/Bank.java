@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.poo.entities.bankAccount.Account;
 import org.poo.entities.card.Card;
+import org.poo.entities.commerciant.Commerciant;
 import org.poo.entities.transaction.Transaction;
 import org.poo.entities.users.User;
 
