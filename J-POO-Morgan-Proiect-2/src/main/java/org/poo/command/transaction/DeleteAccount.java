@@ -10,6 +10,7 @@ import org.poo.utils.Constants;
 import org.poo.utils.DatesForTransaction;
 import org.poo.utils.JsonOutManager;
 import org.poo.utils.TransactionManager;
+import org.poo.utils.observer.CheckAccountsPrecision;
 
 public class DeleteAccount implements Command {
     /**
@@ -17,6 +18,8 @@ public class DeleteAccount implements Command {
      * @param input obiectul ce contine informatiile ncesare pentru a efectua comanda
      */
     public void execute(final CommandInput input) {
+        CheckAccountsPrecision checkAccountsPrecision = new CheckAccountsPrecision();
+        BANKING_SERVICES.acceptVisitor(checkAccountsPrecision);
         AccountDeleteInfo data = null;
 
         if (BANKING_SERVICES.removeAccount(input.getEmail(), input.getAccount())) {

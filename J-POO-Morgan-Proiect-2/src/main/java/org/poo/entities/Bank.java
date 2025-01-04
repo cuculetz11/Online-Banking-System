@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.poo.entities.bankAccount.Account;
 import org.poo.entities.card.Card;
 import org.poo.entities.transaction.Transaction;
+import org.poo.entities.users.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,6 +21,7 @@ public final class Bank {
     private ExchangeRates exchangeRates;
     private Map<String, ArrayList<Transaction>> transactionHistory;
     private Map<String, Card> cardDeletedHistory;
+    private Map<String, Commerciant> commerciants;
     @Setter
     private int currentTimestamp;
 
@@ -30,6 +32,7 @@ public final class Bank {
         accounts = new HashMap<>();
         cards = new HashMap<>();
         cardDeletedHistory = new HashMap<>();
+        commerciants = new HashMap<>();
     }
 
     /**
@@ -53,6 +56,7 @@ public final class Bank {
         transactionHistory = new HashMap<>();
         cards = new HashMap<>();
         cardDeletedHistory = new HashMap<>();
+        commerciants = new HashMap<>();
     }
 
 }

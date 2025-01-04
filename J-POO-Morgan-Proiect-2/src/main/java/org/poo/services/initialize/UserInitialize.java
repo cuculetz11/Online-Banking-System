@@ -1,7 +1,7 @@
 package org.poo.services.initialize;
 
 import org.poo.entities.Bank;
-import org.poo.entities.User;
+import org.poo.entities.users.User;
 import org.poo.fileio.UserInput;
 import org.poo.services.BankMethods;
 

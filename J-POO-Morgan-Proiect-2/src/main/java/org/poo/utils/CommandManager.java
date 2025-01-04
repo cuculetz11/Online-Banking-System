@@ -41,6 +41,8 @@ public final class CommandManager {
             case Constants.REPORT -> new Report();
             case Constants.SPENDINGS_REPORT -> new SpendingReport();
             case Constants.ADD_INTEREST -> new AddInterest();
+            case Constants.WITHDRAW_SAVINGS -> new WithdrawSavings();
+            case Constants.UPGRADE_PLAN -> new UpgradePlan();
             default -> throw new IllegalArgumentException(Constants.COMMAND_NOT_FOUND_ERROR);
         };
     }

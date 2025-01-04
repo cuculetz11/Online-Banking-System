@@ -20,6 +20,8 @@ public final  class Constants {
     public static final String REPORT = "report";
     public static final String SPENDINGS_REPORT = "spendingsReport";
     public static final String ADD_INTEREST = "addInterest";
+    public static final String WITHDRAW_SAVINGS = "withdrawSavings";
+    public static final String UPGRADE_PLAN = "upgradePlan";
     //------------------------------
     public static final String COMMAND_NOT_FOUND_ERROR = "Command not found";
     public static final String ACCOUNT_NOT_FOUND = "Account not found";
@@ -43,6 +45,8 @@ public final  class Constants {
             "You have reached the minimum amount of funds, the card will be frozen";
     public static final String NEW_CARD_CREATED = "New card created";
     public static final String THE_CARD_IS_FROZEN    = "The card is frozen";
+    public static final String DONT_HAVE_MIN_AGE = "You don't have the minimum age required.";
+    public static final String UPGRADE_PLAN_SENTENCE = "Upgrade plan";
     //---------------------------
     public static final String ADD_ACCOUNT_TRANSACTION =
             "AddAccountTransaction";
@@ -61,7 +65,7 @@ public final  class Constants {
     public static final String CARD_PAYMENT_TRANSACTION =
             "CardPaymentTransaction";
     public static final String INSUFFICIENT_FUNDS_TRANSFER_TRANSACTION =
-            "InsufficientFundsTransferTransactionT";
+            "InsufficientFundsTransferTransaction";
     public static final String TRANSFER_TRANSACTION =
             "TransferTransaction";
     public static final String SPLIT_PAYMENT_FAILED_TRANSACTION =
@@ -70,4 +74,12 @@ public final  class Constants {
             "SplitPaymentTransfer";
     public static final String CHECK_CARD_TRANSACTION =
             "CheckCardTransaction";
+    public static final String MIN_AGE_TRANSACTION = "MinAgeTransaction";
+    public static final String PLAN_ALREADY_TRANSACTION = "PlanAlreadyTransaction";
+    public static final String UPGRADE_PLAN_TRANSACTION = "UpgradePlanTransaction";
+
+    public static final double STANDARD_COMMISSION = 0.2;
+
+    public static final double SILVER_COMMISSION = 0.1;
+
 }

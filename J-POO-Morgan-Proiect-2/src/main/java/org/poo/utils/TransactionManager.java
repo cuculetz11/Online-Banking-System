@@ -1,5 +1,6 @@
 package org.poo.utils;
 
+import org.poo.command.transaction.UpgradePlan;
 import org.poo.entities.bankAccount.Account;
 import org.poo.entities.transaction.*;
 
@@ -24,7 +25,9 @@ public final class TransactionManager {
                  Constants.FROZEN_CARD_TRANSACTION,
                  Constants.INSUFFICIENT_FUNDS_PAY_ONLINE_TRANSACTION,
                  Constants.DELETE_ACCOUNT_FAIL_TRANSACTION,
-                 Constants.CHECK_CARD_TRANSACTION:
+                 Constants.CHECK_CARD_TRANSACTION,
+                 Constants.MIN_AGE_TRANSACTION,
+                 Constants.PLAN_ALREADY_TRANSACTION:
                 transaction = new Transaction(datesForTransaction.getTimestamp(),
                         datesForTransaction.getDescription());
                 transaction.addToUserHistory(datesForTransaction.getUserEmail());
@@ -84,6 +87,11 @@ public final class TransactionManager {
                     transaction.addToUserHistory(account.getUser().getEmail());
                 }
                 break;
+            case Constants.UPGRADE_PLAN_TRANSACTION:
+                transaction = new NewPlan(datesForTransaction.getDescription(),
+                        datesForTransaction.getTimestamp(), datesForTransaction.getIban(),
+                        datesForTransaction.getNewPlanType());
+                transaction.addToUserHistory(datesForTransaction.getUserEmail());
             default:
                 break;
         }

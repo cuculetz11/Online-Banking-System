@@ -7,18 +7,16 @@ import lombok.Setter;
 import org.poo.entities.CurrencyPair;
 import org.poo.entities.card.Card;
 import org.poo.entities.transaction.Transaction;
-import org.poo.entities.User;
+import org.poo.entities.users.User;
 import org.poo.fileio.CommandInput;
 import org.poo.services.CurrencyExchangeService;
 import org.poo.utils.Utils;
+import org.poo.utils.observer.BalanceObserverPrecision;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Setter
-public abstract class Account {
+public abstract class Account implements BalanceObserverPrecision {
     private String iban;
     @Getter
     private double balance;
@@ -35,6 +33,7 @@ public abstract class Account {
     @Getter
     @JsonIgnore
     private ArrayList<Transaction> transactionsHistory;
+    private HashMap<String, Double> cashback;
 
     public Account(final double balance, final String currency, final String type) {
         this.iban = Utils.generateIBAN();
@@ -44,6 +43,7 @@ public abstract class Account {
         this.cards = new LinkedHashMap<>();
         this.minimumBalance = 0;
         this.transactionsHistory = new ArrayList<>();
+        this.cashback = new HashMap<>();
     }
 
     /**
@@ -52,7 +52,7 @@ public abstract class Account {
      * @param amount suma trasferata
      */
     public void transfer(final Account receiver, final double amount) {
-        this.setBalance(this.getBalance() - amount);
+        pay(amount);
         CurrencyPair currencyPair = new CurrencyPair(this.currency, receiver.getCurrency());
         CurrencyExchangeService currencyExchangeService = new CurrencyExchangeService();
         double exchangedAmount = currencyExchangeService
@@ -65,7 +65,7 @@ public abstract class Account {
      * @param amount suma platii
      */
     public void pay(final double amount) {
-        this.setBalance(this.getBalance() - amount);
+        this.setBalance(this.getBalance() - amount - this.getUser().getPlan().getCommissionPlan().commission(amount));
     }
 
     /**
@@ -82,7 +82,7 @@ public abstract class Account {
      * @return adevarat daca transferul nu e posibil, fals altfel
      */
     public boolean isTransferPossible(final double amount) {
-        return !(this.getBalance() > amount);
+        return !(this.getBalance() >= (amount + this.getUser().getPlan().getCommissionPlan().commission(amount)));
     }
 
     /**
@@ -129,4 +129,8 @@ public abstract class Account {
         return cards;
     }
 
+    @Override
+    public void checkBalancePrecision() {
+        this.balance = Math.round(this.balance * 100.0) / 100.0;
+    }
 }

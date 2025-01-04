@@ -14,6 +14,7 @@ public class DatesForTransaction {
     private final String cardNumber;
     private final String userEmail;
     private final String iban;
+    private final String newPlanType;
     private final double amount;
     private final String commerciant;
     private final String senderIban;
@@ -42,6 +43,7 @@ public class DatesForTransaction {
         this.accounts = builder.accounts;
         this.accountsList = builder.accountsList;
         this.errorMessage = builder.errorMessage;
+        this.newPlanType = builder.newPlanType;
 
     }
     public static class Builder {
@@ -61,6 +63,7 @@ public class DatesForTransaction {
         private List<String> accounts;
         private ArrayList<Account> accountsList;
         private String errorMessage;
+        private String newPlanType;
 
 
         public Builder(final String description, final int timestamp) {
@@ -85,6 +88,11 @@ public class DatesForTransaction {
          */
         public Builder cardNumber(final String cardNumber1) {
             this.cardNumber = cardNumber1;
+            return this;
+        }
+
+        public Builder newPlanType(final String newPlanType1) {
+            this.newPlanType = newPlanType1;
             return this;
         }
 

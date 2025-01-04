@@ -31,7 +31,6 @@ public class BankTransferStrategy implements PaymentStrategy {
                 throw new IllegalArgumentException("Sender-ul nu trebuie sa fie alias: "
                         + input.getAccount());
             }
-            //execceptii probabil
             if (senderAccount.isTransferPossible(input.getAmount())) {
                 DatesForTransaction datesForTransaction =
                         new DatesForTransaction.Builder(Constants.INSUFFICIENT_FUNDS,

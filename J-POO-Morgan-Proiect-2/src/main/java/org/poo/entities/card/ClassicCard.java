@@ -10,6 +10,6 @@ public class ClassicCard extends Card {
      */
     @Override
     public void pay(final double amount) {
-        super.getAccount().setBalance(super.getAccount().getBalance() - amount);
+        super.getAccount().pay(amount);
     }
 }

@@ -3,7 +3,7 @@ package org.poo.command.debug;
 import org.poo.command.Command;
 import org.poo.command.debug.dto.DebugDTO;
 import org.poo.entities.Bank;
-import org.poo.entities.User;
+import org.poo.entities.users.User;
 import org.poo.fileio.CommandInput;
 import org.poo.utils.JsonOutManager;
 
