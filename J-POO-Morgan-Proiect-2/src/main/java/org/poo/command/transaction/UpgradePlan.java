@@ -8,6 +8,7 @@ import org.poo.fileio.CommandInput;
 import org.poo.services.CurrencyExchangeService;
 import org.poo.utils.Constants;
 import org.poo.utils.DatesForTransaction;
+import org.poo.utils.ErrorManager;
 import org.poo.utils.TransactionManager;
 
 import java.util.HashMap;
@@ -24,6 +25,7 @@ public class UpgradePlan implements Command {
     public void execute(CommandInput input) {
         Account account = Bank.getInstance().getAccounts().get(input.getAccount());
         if(account == null) {
+            ErrorManager.notFound(Constants.ACCOUNT_NOT_FOUND, input.getCommand(), input.getTimestamp());
             return;
         }
         if(planToValue.get(account.getUser().getPlan().getPlanType()) == planToValue.get(input.getNewPlanType())) {

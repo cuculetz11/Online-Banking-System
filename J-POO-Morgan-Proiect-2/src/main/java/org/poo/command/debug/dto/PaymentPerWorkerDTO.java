@@ -4,11 +4,11 @@ import lombok.Getter;
 
 @Getter
 public class PaymentPerWorkerDTO {
-    private String name;
+    private String username;
     private double spent;
     private double deposited;
     public PaymentPerWorkerDTO(String name) {
-        this.name = name;
+        this.username = name;
         spent = 0;
         deposited = 0;
     }

@@ -41,7 +41,8 @@ public class BussinessAccount extends Account {
 
     @Override
     public String isTransferPossible(double amount) {
-        if(amount + this.getUser().getPlan().getCommissionPlan().commission(amount, getCurrency()) >= payLimit) {
+
+        if(employees.contains(Bank.getInstance().getCurrentInput().getEmail()) && amount + this.getUser().getPlan().getCommissionPlan().commission(amount, getCurrency()) >= payLimit) {
             return Constants.LIMIT_EXCEEDED;
         }
         if(this.getBalance() < (amount + this.getUser().getPlan().getCommissionPlan().commission(amount, getCurrency()))) {

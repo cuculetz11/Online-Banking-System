@@ -1,10 +1,13 @@
 package org.poo.command.business;
 
 import org.poo.command.Command;
+import org.poo.command.debug.dto.DebugActionsDTO;
 import org.poo.entities.Bank;
 import org.poo.entities.bankAccount.Account;
 import org.poo.entities.bankAccount.BussinessAccount;
+import org.poo.entities.transaction.Transaction;
 import org.poo.fileio.CommandInput;
+import org.poo.utils.JsonOutManager;
 
 public class ChangeSpendingLimit implements Command {
     @Override
@@ -20,7 +23,10 @@ public class ChangeSpendingLimit implements Command {
         }
         BussinessAccount businessAccount = (BussinessAccount) account;
         if(!businessAccount.getUser().getEmail().equals(input.getEmail())) {
-            System.out.println("User email does not match");
+            Transaction err = new Transaction(input.getTimestamp(), "You must be owner in order to change spending limit.");
+            DebugActionsDTO<Transaction> debugActionsDTO = new DebugActionsDTO<>(input.getCommand(), err, input.getTimestamp());
+            JsonOutManager.getInstance().addToOutput(debugActionsDTO);
+
             return;
         }
         businessAccount.setPayLimit(input.getAmount());

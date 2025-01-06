@@ -1,19 +1,26 @@
 package org.poo.command.debug.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 import java.util.List;
 @Getter
 public class BusinessReportTransaction {
+    @JsonProperty("IBAN")
     private String iban;
     private double balance;
     private String currency;
+    @JsonProperty("spending limit")
     private double payLimit;
+    @JsonProperty("deposit limit")
     private double depositLimit;
+    @JsonProperty("statistics type")
     private String type;
     private List<PaymentPerWorkerDTO> managers;
     private List<PaymentPerWorkerDTO> employees;
+    @JsonProperty("total spent")
     private double total_spent;
+    @JsonProperty("total deposited")
     private double total_deposit;
 
     public BusinessReportTransaction(String iban, String type, double balance, String currency, double payLimit, double depositLimit, List<PaymentPerWorkerDTO> managers, List<PaymentPerWorkerDTO> employees, double total_spent, double total_deposit) {

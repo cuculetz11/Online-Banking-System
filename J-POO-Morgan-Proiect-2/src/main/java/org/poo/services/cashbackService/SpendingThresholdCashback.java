@@ -53,9 +53,9 @@ public class SpendingThresholdCashback implements CashbackStrategy{
         } else if(amount >= 500) {
             threshold = 500;
         }
-        if(account.getUsedCashback().contains(String.valueOf(threshold))) {
-            return true;
-        }
+//        if(account.getUsedCashback().contains(String.valueOf(threshold))) {
+//            return true;
+//        }
         account.getUsedCashback().add(String.valueOf(threshold));
         return false;
     }

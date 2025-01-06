@@ -53,6 +53,7 @@ public final class CommandManager {
             case Constants.CHANGE_DEPOSIT_LIMIT -> new ChangeDepositLimit();
             case Constants.CHANGE_SPENDING_LIMIT -> new ChangeSpendingLimit();
             case Constants.BUSINESS_REPORT -> new BusinessReport();
+            case Constants.REJECT_SPLITPAYMENT -> new RejectSplitPayment();
             default -> throw new IllegalArgumentException(Constants.COMMAND_NOT_FOUND_ERROR);
         };
     }

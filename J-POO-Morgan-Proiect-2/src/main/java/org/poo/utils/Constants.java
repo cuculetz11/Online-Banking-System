@@ -30,6 +30,7 @@ public final  class Constants {
     public static final String BUSINESS_REPORT = "businessReport";
     public static final String TRANSACTION = "transaction";
     public static final String COMMERCIANT ="commerciant";
+    public static final String REJECT_SPLITPAYMENT = "rejectSplitPayment";
     //------------------------------
     public static final String COMMAND_NOT_FOUND_ERROR = "Command not found";
     public static final String ACCOUNT_NOT_FOUND = "Account not found";
