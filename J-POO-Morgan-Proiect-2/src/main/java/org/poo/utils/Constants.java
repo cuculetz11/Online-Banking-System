@@ -23,6 +23,13 @@ public final  class Constants {
     public static final String WITHDRAW_SAVINGS = "withdrawSavings";
     public static final String UPGRADE_PLAN = "upgradePlan";
     public static final String CASH_WITHDRAWAL = "cashWithdrawal";
+    public static final String ACCEPT_SPLITPAYMENT = "acceptSplitPayment";
+    public static final String ADD_NEW_BUSINESS_ASSOCIATE = "addNewBusinessAssociate";
+    public static final String CHANGE_SPENDING_LIMIT = "changeSpendingLimit";
+    public static final String CHANGE_DEPOSIT_LIMIT = "changeDepositLimit";
+    public static final String BUSINESS_REPORT = "businessReport";
+    public static final String TRANSACTION = "transaction";
+    public static final String COMMERCIANT ="commerciant";
     //------------------------------
     public static final String COMMAND_NOT_FOUND_ERROR = "Command not found";
     public static final String ACCOUNT_NOT_FOUND = "Account not found";
@@ -53,6 +60,8 @@ public final  class Constants {
     public static final String USER_NOT_FOUND = "User not found";
     public static final String INTEREST_RATE_INCOME = "Interest rate income";
     public static final String DONT_HAVE_CLASSIC = "You do not have a classic account.";
+    public static final String TRANSACTION_IMPOSSIBLE = "Transaction impossible";
+    public static final String LIMIT_EXCEEDED = "Limit exceeded";
 
     //---------------------------
     public static final String ADD_ACCOUNT_TRANSACTION =
@@ -88,6 +97,7 @@ public final  class Constants {
     public static final String UPGRADE_PLAN_TRANSACTION = "UpgradePlanTransaction";
     public static final String INTEREST_RATE_TRANSACTION = "InterestRateTransaction";
     public static final String DONT_HAVE_CLASSIC_TRANSACTION = "DontHaveClassicTransaction";
+    public static final String SPLIT_PAYMENT_TRANSACTION = "SplitPaymentTransaction";
 
     public static final double STANDARD_COMMISSION = 0.2;
 

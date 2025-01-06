@@ -53,7 +53,7 @@ public class WithdrawSavingsAction implements PaymentStrategy {
                 return true;
             }
             this.exchangedAmount = CURRENCY_EXCHANGE_SERVICE.exchangeCurrency(new CurrencyPair(input.getCurrency(), this.account.getCurrency()), input.getAmount());
-            if (this.account.isTransferPossible(this.exchangedAmount)) {
+            if (this.account.isTransferPossible(this.exchangedAmount).equals(Constants.TRANSACTION_IMPOSSIBLE)) {
                 DatesForTransaction datesForTransaction =
                         new DatesForTransaction.Builder(Constants.INSUFFICIENT_FUNDS,
                                 input.getTimestamp())
@@ -61,6 +61,10 @@ public class WithdrawSavingsAction implements PaymentStrategy {
                                 .iban(this.account.getIban())
                                 .build();
                 TransactionManager.generateAndAddTransaction(datesForTransaction);
+                return true;
+            }
+            if(this.account.isTransferPossible(this.exchangedAmount).equals(Constants.LIMIT_EXCEEDED)) {
+                System.out.println("withdrow limit");
                 return true;
             }
             return false;

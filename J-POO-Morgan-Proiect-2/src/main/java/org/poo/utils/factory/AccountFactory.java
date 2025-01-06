@@ -1,7 +1,8 @@
 package org.poo.utils.factory;
 
 import org.poo.entities.bankAccount.Account;
-import org.poo.entities.bankAccount.ClassicAcount;
+import org.poo.entities.bankAccount.BussinessAccount;
+import org.poo.entities.bankAccount.ClassicAccount;
 import org.poo.entities.bankAccount.SavingsAccount;
 import org.poo.fileio.CommandInput;
 
@@ -15,8 +16,9 @@ public final class AccountFactory {
      */
     public static Account getAccount(final CommandInput input) {
         return switch (input.getAccountType()) {
-            case "classic" -> new ClassicAcount(input);
+            case "classic" -> new ClassicAccount(input);
             case "savings" -> new SavingsAccount(input);
+            case "business" -> new BussinessAccount(input);
             default -> null;
         };
     }

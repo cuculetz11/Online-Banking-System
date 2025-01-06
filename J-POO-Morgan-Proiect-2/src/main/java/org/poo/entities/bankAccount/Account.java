@@ -84,13 +84,8 @@ public abstract class Account implements BalanceObserverPrecision {
     }
 
     /**
-     * Verifica daca se poate realiza un transfer
-     * @param amount suma ce trebuire transferata
-     * @return adevarat daca transferul nu e posibil, fals altfel
      */
-    public boolean isTransferPossible(final double amount) {
-        return !(this.getBalance() >= (amount + this.getUser().getPlan().getCommissionPlan().commission(amount, currency)));
-    }
+    public abstract String isTransferPossible(final double amount);
 
     /**
      * Adauga dobanda obtinuta la suma din contul dat(trebuie sa fie de economii contul)
@@ -109,6 +104,14 @@ public abstract class Account implements BalanceObserverPrecision {
      * @param input datale necesare
      */
     public abstract void spendingReport(CommandInput input);
+
+    public abstract void deposit(CommandInput input);
+
+    public abstract void setMinBalance(CommandInput input);
+
+    public abstract void deleteCard(CommandInput input);
+
+    public abstract void deleteAccount(CommandInput input);
 
     /**
      * Obstine cardurile ca o lista

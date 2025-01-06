@@ -36,7 +36,7 @@ public class BankTransferStrategy implements PaymentStrategy {
                 throw new IllegalArgumentException("Sender-ul nu trebuie sa fie alias: "
                         + input.getAccount());
             }
-            if (senderAccount.isTransferPossible(input.getAmount())) {
+            if (senderAccount.isTransferPossible(input.getAmount()).equals(Constants.TRANSACTION_IMPOSSIBLE)) {
                 DatesForTransaction datesForTransaction =
                         new DatesForTransaction.Builder(Constants.INSUFFICIENT_FUNDS,
                                 input.getTimestamp())
@@ -47,13 +47,20 @@ public class BankTransferStrategy implements PaymentStrategy {
                 TransactionManager.generateAndAddTransaction(datesForTransaction);
                 return true;
             }
+            if(senderAccount.isTransferPossible(input.getAmount()).equals(Constants.LIMIT_EXCEEDED)) {
+                System.out.println("limiyta");
+                return true;
+            }
+
             this.receiver = receiverAccount;
             this.sender = senderAccount;
             this.amount = input.getAmount();
-            if(Bank.getInstance().getCommerciants().containsKey(senderAccount.getIban())) {
+
+            if(Bank.getInstance().getCommerciants().containsKey(receiver.getIban())) {
                 Commerciant commerciant = Bank.getInstance().getCommerciants().get(senderAccount.getIban());
-                receiver.getUser().getPlan().setCashBackContext(new CashBackContext(commerciant, receiver, amount));
+                sender.getUser().getPlan().setCashBackContext(new CashBackContext(commerciant, sender, amount));
             }
+            sender.getUser().getPlan().checkUpdate(amount, sender.getCurrency());
             String money = input.getAmount() + " " + sender.getCurrency();
             DatesForTransaction datesForTransactionSender =
                     new DatesForTransaction.Builder(input.getDescription(), input.getTimestamp())

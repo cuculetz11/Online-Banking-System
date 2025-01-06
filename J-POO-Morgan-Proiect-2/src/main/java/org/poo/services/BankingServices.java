@@ -23,6 +23,7 @@ public class BankingServices {
      * @param input comanda si toate datele pentru a putea fi executata
      */
     public void performCommand(final CommandInput input) {
+        Bank.getInstance().setCurrentInput(input);
         Command c = CommandManager.getConcreteCommand(input.getCommand());
         c.execute(input);
     }
@@ -52,17 +53,15 @@ public class BankingServices {
     }
 
     /**
-     * Adauga bani pe un cont dat
-     * @param accountNameorIBAN contul dat
-     * @param amount suma
+     *
      */
-    public void addFounds(final String accountNameorIBAN, final double amount) {
-        Account account = Bank.getInstance().getAccounts().get(accountNameorIBAN);
+    public void addFounds(final CommandInput input) {
+        Account account = Bank.getInstance().getAccounts().get(input.getAccount());
         if (account == null) {
-            System.err.println("contul nu a fost gasit: " + accountNameorIBAN);
+            System.err.println("contul nu a fost gasit: " + input.getAccount());
             return;
         }
-        account.setBalance(account.getBalance() + amount);
+        account.deposit(input);
     }
 
     /**
@@ -87,22 +86,10 @@ public class BankingServices {
         return true;
     }
 
-    /**
-     * Stergera unui card
-     * @param emailUser email-ul user-ului
-     * @param cardNumber numarul cardului
-     */
-    public void deleteCard(final String emailUser, final String cardNumber) {
-        Map<String, Account> userAccounts = Bank.getInstance().getUsers().get(emailUser)
-                .getAccounts();
-        for (Account account : userAccounts.values()) {
-            if (account.getCards().containsKey(cardNumber)) {
-                Bank.getInstance().getCardDeletedHistory().put(cardNumber, account.getCards()
-                        .get(cardNumber));
-                account.getCards().remove(cardNumber);
-                Bank.getInstance().getCards().remove(cardNumber);
-                break;
-            }
-        }
+    public void deleteCard(final Account account, final String cardNumber) {
+        //mergea un hashset mai bine aici
+        Bank.getInstance().getCardDeletedHistory().put(cardNumber, account.getCards().get(cardNumber));
+        account.getCards().remove(cardNumber);
+        Bank.getInstance().getCards().remove(cardNumber);
     }
 }

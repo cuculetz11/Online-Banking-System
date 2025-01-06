@@ -5,23 +5,22 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-public class ErrorSplitPayment extends Transaction {
+public class ErrorSplitPaymentEq extends Transaction {
     private final String currency;
-    private final List<Double> amountForUsers;
+    private final double amount;
     private final String splitPaymentType;
     private final String error;
     private final List<String> involvedAccounts;
 
-    public ErrorSplitPayment(final int timestamp, final String currency,
+    public ErrorSplitPaymentEq(final int timestamp, final String currency,
                              final List<String> involvedAccounts, final String description,
-                             final String splitPaymentType, List<Double> amountForUsers,
+                             final String splitPaymentType, final double amount,
                              final String error) {
         super(timestamp, description);
         this.currency = currency;
         this.involvedAccounts = involvedAccounts;
         this.error = error;
         this.splitPaymentType = splitPaymentType;
-        this.amountForUsers = amountForUsers;
+        this.amount = amount;
     }
-
 }

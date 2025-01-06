@@ -1,32 +1,26 @@
 package org.poo.entities.bankAccount;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.Setter;
-import org.poo.command.debug.dto.AccountDeleteInfo;
-import org.poo.command.debug.dto.DebugActionsDTO;
-import org.poo.command.debug.dto.DeleteAccountDTO;
-import org.poo.command.debug.dto.ErrorPrint;
+import org.poo.command.debug.dto.*;
 import org.poo.entities.Bank;
+import org.poo.entities.Merchant;
 import org.poo.entities.card.Card;
+import org.poo.entities.transaction.CardPayment;
+import org.poo.entities.transaction.Transaction;
 import org.poo.fileio.CommandInput;
 import org.poo.services.BankingServices;
 import org.poo.utils.*;
 
-@Setter
-@Getter
-public class SavingsAccount extends Account {
-    @JsonIgnore
-    private double interestRate;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
-    public SavingsAccount(final CommandInput input) {
-        super(0, input.getCurrency(), "savings");
-        this.interestRate = input.getInterestRate();
+public class ClassicAccount extends Account {
+    public ClassicAccount(final CommandInput input) {
+        super(0, input.getCurrency(), "classic");
     }
 
     @Override
     public String isTransferPossible(double amount) {
-        if(this.getBalance() < (amount + this.getUser().getPlan().getCommissionPlan().commission(amount, getCurrency()))) {
+        if(!(this.getBalance() >= (amount + this.getUser().getPlan().getCommissionPlan().commission(amount, getCurrency())))) {
             return Constants.TRANSACTION_IMPOSSIBLE;
         }
         return "";
@@ -38,18 +32,8 @@ public class SavingsAccount extends Account {
      */
     @Override
     public void addInterest(final CommandInput input) {
-        DatesForTransaction datesForTransaction =
-                new DatesForTransaction.Builder(Constants.INTEREST_RATE_INCOME,
-                        input.getTimestamp())
-                        .transactionName(Constants.INTEREST_RATE_TRANSACTION)
-                        .userEmail(this.getUser().getEmail())
-                        .amount(this.getBalance() * this.getInterestRate())
-                        .currency(this.getCurrency())
-                        .build();
-        TransactionManager.generateAndAddTransaction(datesForTransaction);
-
-        this.setBalance(this.getBalance() + this.getBalance()
-                * this.getInterestRate());
+        ErrorManager.notFound(Constants.NOT_SAVINGS_ACCOUNT, input.getCommand(),
+                input.getTimestamp());
     }
 
     /**
@@ -58,15 +42,8 @@ public class SavingsAccount extends Account {
      */
     @Override
     public void changeInterestRate(final CommandInput input) {
-        this.setInterestRate(input.getInterestRate());
-        DatesForTransaction datesForTransaction =
-                new DatesForTransaction.Builder(
-                        "Interest rate of the account changed to "
-                                + input.getInterestRate(), input.getTimestamp())
-                        .transactionName(Constants.CHANGE_INTEREST_RATE_TRANSACTION)
-                        .userEmail(this.getUser().getEmail())
-                        .build();
-        TransactionManager.generateAndAddTransaction(datesForTransaction);
+        ErrorManager.notFound(Constants.NOT_SAVINGS_ACCOUNT, input.getCommand(),
+                input.getTimestamp());
     }
 
     /**
@@ -79,7 +56,36 @@ public class SavingsAccount extends Account {
             System.out.println("nu e const business");
             return;
         }
-        ErrorManager.wrongType(input.getCommand(), input.getTimestamp());
+        ArrayList<Transaction> transactions = new ArrayList<>();
+        LinkedHashMap<String, Merchant> merchants = new LinkedHashMap<>();
+
+
+        for (Transaction transaction : this.getTransactionsHistory()) {
+            if (transaction.getTimestamp() > input.getEndTimestamp()) {
+                break;
+            }
+            if (transaction.getTimestamp() >= input.getStartTimestamp()
+                    && transaction.getDescription().equals(Constants.CARD_PAYMENT)) {
+                transactions.add(transaction);
+                CardPayment cardPayment = (CardPayment) transaction;
+                if (!merchants.containsKey(cardPayment.getCommerciant())) {
+                    Merchant merchant = new Merchant(cardPayment.getCommerciant(),
+                            cardPayment.getAmount());
+                    merchants.put(cardPayment.getCommerciant(), merchant);
+                } else {
+                    merchants.get(cardPayment.getCommerciant()).setTotal(merchants.get(cardPayment
+                            .getCommerciant()).getTotal() + cardPayment.getAmount());
+                }
+            }
+        }
+        ArrayList<Merchant> merchantsList = new ArrayList<>(merchants.values());
+        merchantsList.sort((c2, c1) -> c2.getCommerciant().compareTo(c1.getCommerciant()));
+        AccountMerchantsDTO accountCommerciantsDTO = new AccountMerchantsDTO(input.getAccount(),
+                this.getBalance(), this.getCurrency(), transactions, merchantsList);
+        DebugActionsDTO<AccountMerchantsDTO> spendingReports =
+                new DebugActionsDTO<>(input.getCommand(), accountCommerciantsDTO,
+                        input.getTimestamp());
+        JsonOutManager.getInstance().addToOutput(spendingReports);
     }
 
     @Override
@@ -97,9 +103,10 @@ public class SavingsAccount extends Account {
         if (!this.getUser().getEmail().equals(input.getEmail())) {
             System.out.println("acest card nu e a userului dat in comanda");
         }
+        BankingServices bankingServices = new BankingServices();
+
         String iban = Bank.getInstance().getCards().get(input.getCardNumber()).getAccount()
                 .getIban();
-        BankingServices bankingServices = new BankingServices();
         bankingServices.deleteCard(this, input.getCardNumber());
 
         DatesForTransaction datesForTransaction =

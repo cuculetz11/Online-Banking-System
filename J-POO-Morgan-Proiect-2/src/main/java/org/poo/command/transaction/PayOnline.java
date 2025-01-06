@@ -15,8 +15,6 @@ public class PayOnline implements Command {
      */
     @Override
     public void execute(final CommandInput input) {
-        Bank.getInstance().setCurrentTimestamp(input.getTimestamp());
-
         PaymentStrategy cardPay = new CardPaymentStrategy();
         if (cardPay.checkForErrors(input)) {
             return;

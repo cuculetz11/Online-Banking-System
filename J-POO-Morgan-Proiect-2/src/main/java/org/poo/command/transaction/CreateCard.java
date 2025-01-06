@@ -21,8 +21,7 @@ public class CreateCard implements Command {
         if (Bank.getInstance().getUsers().get(input.getEmail()) == null) {
            throw new IllegalArgumentException("Utilizatorul nu exista: " + input.getEmail());
         }
-        Account account = Bank.getInstance().getUsers().get(input.getEmail()).getAccounts()
-                .get(input.getAccount());
+        Account account = Bank.getInstance().getAccounts().get(input.getAccount());
         if (account == null) {
             throw new IllegalArgumentException("Contul nu exista: " + input.getAccount());
         }
@@ -33,6 +32,7 @@ public class CreateCard implements Command {
             throw new IllegalArgumentException("Nu se poate crea cardul dupa comanda data: "
                     + input.getCommand());
         }
+        card.setCardOwnerEmail(input.getEmail());
         BANKING_SERVICES.addCard(card, account);
         DatesForTransaction datesForTransaction =
                 new DatesForTransaction.Builder(Constants.NEW_CARD_CREATED, input.getTimestamp())

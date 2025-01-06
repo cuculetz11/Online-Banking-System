@@ -13,6 +13,8 @@ public abstract class Card {
     private String status;
     @JsonIgnore
     private Account account;
+    @JsonIgnore
+    private String cardOwnerEmail;
 
     public Card() {
         this.cardNumber = Utils.generateCardNumber();

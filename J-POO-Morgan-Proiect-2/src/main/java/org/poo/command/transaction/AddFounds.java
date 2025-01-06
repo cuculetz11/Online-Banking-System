@@ -10,6 +10,6 @@ public class AddFounds implements Command {
      */
     @Override
     public void execute(final CommandInput input) {
-        BANKING_SERVICES.addFounds(input.getAccount(), input.getAmount());
+        BANKING_SERVICES.addFounds(input);
     }
 }

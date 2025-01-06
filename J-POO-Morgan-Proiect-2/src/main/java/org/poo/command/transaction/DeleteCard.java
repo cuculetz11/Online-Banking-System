@@ -28,28 +28,11 @@ public class DeleteCard implements Command {
                 return;
             }
 
-            if (!card.getAccount().getUser().getEmail().equals(input.getEmail())) {
-                throw new Exception("Acest card nu este a user-ului ce vrea sa-l stearga: "
-                        + input.getCardNumber());
-            }
-
-            Account account = Bank.getInstance().getCards().get(input.getCardNumber()).getAccount();
-            if (account == null) {
+            Account cardHolder = card.getAccount();
+            if (cardHolder == null) {
                 throw new IllegalArgumentException("Contul nu exista: " + input.getCardNumber());
             }
-            String iban = Bank.getInstance().getCards().get(input.getCardNumber()).getAccount()
-                    .getIban();
-
-            BANKING_SERVICES.deleteCard(input.getEmail(), input.getCardNumber());
-            DatesForTransaction datesForTransaction =
-                    new DatesForTransaction.Builder(Constants.THE_CARD_HAS_BEEN_DESTROYED,
-                            input.getTimestamp())
-                            .transactionName(Constants.DELETE_CARD_TRANSACTION)
-                            .cardNumber(input.getCardNumber())
-                            .userEmail(input.getEmail())
-                            .iban(iban)
-                            .build();
-            TransactionManager.generateAndAddTransaction(datesForTransaction);
+            cardHolder.deleteCard(input);
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }

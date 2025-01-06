@@ -23,6 +23,9 @@ public class CardPaymentStrategy implements PaymentStrategy {
     @Override
     public boolean checkForErrors(final CommandInput input) {
         Card cardInput = Bank.getInstance().getCards().get(input.getCardNumber());
+        if(input.getAmount() == 0) {
+            return true;
+        }
         if (cardInput == null) {
             ErrorManager.notFound(Constants.CARD_NOT_FOUND, input.getCommand(),
                     input.getTimestamp());
@@ -39,11 +42,14 @@ public class CardPaymentStrategy implements PaymentStrategy {
             TransactionManager.generateAndAddTransaction(datesForTransaction);
             return true;
         }
-
+        if(Bank.getInstance().getCommerciants().get(input.getCommerciant()) == null) {
+            System.out.println("comercinat invalid");
+            return true;
+        }
         double amount =
                 CURRENCY_EXCHANGE_SERVICE.exchangeCurrency(new CurrencyPair(input.getCurrency(),
                         cardInput.getAccount().getCurrency()), input.getAmount());
-        if (cardInput.getAccount().isTransferPossible(amount)) {
+        if (cardInput.getAccount().isTransferPossible(amount).equals(Constants.TRANSACTION_IMPOSSIBLE)) {
             DatesForTransaction datesForTransaction =
                     new DatesForTransaction.Builder(Constants.INSUFFICIENT_FUNDS,
                             input.getTimestamp())
@@ -51,6 +57,11 @@ public class CardPaymentStrategy implements PaymentStrategy {
                             .userEmail(input.getEmail())
                             .build();
             TransactionManager.generateAndAddTransaction(datesForTransaction);
+            return true;
+        }
+
+        if (cardInput.getAccount().isTransferPossible(amount).equals(Constants.LIMIT_EXCEEDED)) {
+            System.out.println("limita cardului exceeed");
             return true;
         }
         this.amountToPay = amount;
@@ -65,7 +76,7 @@ public class CardPaymentStrategy implements PaymentStrategy {
                         .commerciant(input.getCommerciant())
                         .userEmail(input.getEmail())
                         .iban(cardInput.getAccount().getIban())
-                        .amount(amount)
+                        .amount(Math.round(amount * 100) / 100.0)
                         .build();
         TransactionManager.generateAndAddTransaction(datesForTransaction);
         Transaction transaction = new CardPayment(amount, input.getCommerciant(),

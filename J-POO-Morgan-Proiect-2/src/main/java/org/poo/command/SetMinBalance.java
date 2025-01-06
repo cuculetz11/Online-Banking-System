@@ -1,6 +1,7 @@
 package org.poo.command;
 
 import org.poo.entities.Bank;
+import org.poo.entities.bankAccount.Account;
 import org.poo.fileio.CommandInput;
 
 public class SetMinBalance implements Command {
@@ -10,7 +11,11 @@ public class SetMinBalance implements Command {
      */
     @Override
     public void execute(final CommandInput input) {
-        Bank.getInstance().getAccounts().get(input.getAccount())
-                .setMinimumBalance(input.getAmount());
+        Account account = Bank.getInstance().getAccounts().get(input.getAccount());
+        if(account == null){
+            System.out.println("Account not found");
+            return;
+        }
+       account.setMinBalance(input);
     }
 }

@@ -24,12 +24,12 @@ public class OneTimePayCard extends Card {
         inputCreate.setAccount(iban);
         inputCreate.setEmail(userEmail);
         inputCreate.setCommand("createOneTimeCard");
-        inputCreate.setTimestamp(Bank.getInstance().getCurrentTimestamp());
+        inputCreate.setTimestamp(Bank.getInstance().getCurrentInput().getTimestamp());
 
         CommandInput inputDelete = new CommandInput();
         inputDelete.setCardNumber(super.getCardNumber());
         inputDelete.setEmail(userEmail);
-        inputDelete.setTimestamp(Bank.getInstance().getCurrentTimestamp());
+        inputDelete.setTimestamp(Bank.getInstance().getCurrentInput().getTimestamp());
 
         DeleteCard deleteCard = new DeleteCard();
         deleteCard.execute(inputDelete);

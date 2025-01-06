@@ -30,7 +30,8 @@ public class WithdrawCashAction implements PaymentStrategy {
             }
             this.cardAccount = card.getAccount();
             if(!card.getAccount().getUser().getEmail().equals(input.getEmail())) {
-                System.out.println("problem");
+                ErrorManager.notFound(Constants.USER_NOT_FOUND,input.getCommand(),
+                        input.getTimestamp());
                 return true;
             }
             if(card.getStatus().equals("frozen")) {
@@ -38,12 +39,23 @@ public class WithdrawCashAction implements PaymentStrategy {
                 return true;
             }
             this.amount = CURRENCY_EXCHANGE_SERVICE.exchangeCurrency(new CurrencyPair("RON", cardAccount.getCurrency()), input.getAmount());
-            if(this.cardAccount.getMinimumBalance() >= cardAccount.getBalance() - this.amount - cardAccount.getUser().getPlan().getCommissionPlan().commission(amount, cardAccount.getCurrency())) {
-                System.out.println("problem");
+
+            if(cardAccount.isTransferPossible(amount).equals(Constants.TRANSACTION_IMPOSSIBLE)) {
+                DatesForTransaction datesForTransaction =
+                        new DatesForTransaction.Builder(Constants.INSUFFICIENT_FUNDS,
+                                input.getTimestamp())
+                                .transactionName(Constants.INSUFFICIENT_FUNDS_PAY_ONLINE_TRANSACTION)
+                                .userEmail(input.getEmail())
+                                .build();
+                TransactionManager.generateAndAddTransaction(datesForTransaction);
                 return true;
             }
-            if(cardAccount.isTransferPossible(amount)) {
-                System.out.println("problem");
+            if(cardAccount.isTransferPossible(amount).equals(Constants.LIMIT_EXCEEDED)) {
+                System.out.println("withdrow limit");
+                return true;
+            }
+            if(this.cardAccount.getMinimumBalance() >= cardAccount.getBalance() - this.amount - cardAccount.getUser().getPlan().getCommissionPlan().commission(amount, cardAccount.getCurrency())) {
+                System.out.println("Cannot perform payment due to a minimum balance being se");
                 return true;
             }
             DatesForTransaction datesForTransaction =

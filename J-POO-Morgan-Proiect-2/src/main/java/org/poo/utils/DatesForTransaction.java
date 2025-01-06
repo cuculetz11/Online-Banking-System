@@ -25,6 +25,8 @@ public class DatesForTransaction {
     private final List<String> accounts;
     private final ArrayList<Account> accountsList;
     private final String errorMessage;
+    private final List<Double> amountForUsers;
+    private final String splitPaymentType;
 
     public DatesForTransaction(final Builder builder) {
         this.transactionName = builder.transactionName;
@@ -44,6 +46,8 @@ public class DatesForTransaction {
         this.accountsList = builder.accountsList;
         this.errorMessage = builder.errorMessage;
         this.newPlanType = builder.newPlanType;
+        this.amountForUsers = builder.amountForUsers;
+        this.splitPaymentType = builder.splitPaymentType;
 
     }
     public static class Builder {
@@ -64,6 +68,8 @@ public class DatesForTransaction {
         private ArrayList<Account> accountsList;
         private String errorMessage;
         private String newPlanType;
+        private List<Double> amountForUsers;
+        private String splitPaymentType;
 
 
         public Builder(final String description, final int timestamp) {
@@ -221,6 +227,15 @@ public class DatesForTransaction {
          */
         public Builder accountsList(final ArrayList<Account> accountsList1) {
             this.accountsList = accountsList1;
+            return this;
+        }
+        public Builder amountForUsers(final List<Double> amountForUsers1) {
+            this.amountForUsers = amountForUsers1;
+            return this;
+        }
+
+        public Builder splitPaymentType(final String splitPaymentType1) {
+            this.splitPaymentType = splitPaymentType1;
             return this;
         }
     }

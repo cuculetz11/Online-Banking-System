@@ -70,23 +70,35 @@ public final class TransactionManager {
                 transaction.addToAccountHistory(datesForTransaction.getIban());
                 break;
             case Constants.SPLIT_PAYMENT_FAILED_TRANSACTION:
-                transaction = new ErrorSplitPayment(datesForTransaction.getTimestamp(),
-                        datesForTransaction.getCurrency(), datesForTransaction.getAmount(),
-                        datesForTransaction.getAccounts(), datesForTransaction.getDescription(),
-                        datesForTransaction.getErrorMessage());
-                for (Account account : datesForTransaction.getAccountsList()) {
-                    transaction.addToAccountHistory(account.getIban());
-                    transaction.addToUserHistory(account.getUser().getEmail());
+                if(datesForTransaction.getSplitPaymentType().equals("custom")) {
+                    transaction = new ErrorSplitPayment(datesForTransaction.getTimestamp(),
+                            datesForTransaction.getCurrency(), datesForTransaction.getAccounts(),
+                            datesForTransaction.getDescription(), datesForTransaction.getSplitPaymentType(),
+                            datesForTransaction.getAmountForUsers(), datesForTransaction.getErrorMessage());
+                } else {
+                    transaction = new ErrorSplitPaymentEq(datesForTransaction.getTimestamp(),
+                            datesForTransaction.getCurrency(),datesForTransaction.getAccounts(),
+                            datesForTransaction.getDescription(), datesForTransaction.getSplitPaymentType(),
+                            datesForTransaction.getAmountForUsers().get(0), datesForTransaction.getErrorMessage());
                 }
+
+                transaction.addToUserHistory(datesForTransaction.getUserEmail());
+                transaction.addToAccountHistory(datesForTransaction.getIban());
                 break;
-            case Constants.SPLIT_PAYMENT_TRANSFER:
-                transaction = new SplitPayment(datesForTransaction.getTimestamp(),
-                        datesForTransaction.getCurrency(), datesForTransaction.getAmount(),
-                        datesForTransaction.getAccounts(), datesForTransaction.getDescription());
-                for (Account account : datesForTransaction.getAccountsList()) {
-                    transaction.addToAccountHistory(account.getIban());
-                    transaction.addToUserHistory(account.getUser().getEmail());
+            case Constants.SPLIT_PAYMENT_TRANSACTION:
+                if(datesForTransaction.getSplitPaymentType().equals("custom")) {
+                    transaction = new SplitPayment(datesForTransaction.getTimestamp(),
+                            datesForTransaction.getCurrency(),
+                            datesForTransaction.getAccounts(), datesForTransaction.getDescription(),
+                            datesForTransaction.getSplitPaymentType(), datesForTransaction.getAmountForUsers());
+                } else {
+                    transaction = new SplitPaymentEq(datesForTransaction.getTimestamp(),
+                            datesForTransaction.getCurrency(), datesForTransaction.getAccounts(),
+                            datesForTransaction.getDescription(), datesForTransaction.getSplitPaymentType(),
+                            datesForTransaction.getAmountForUsers().get(0));
                 }
+                transaction.addToUserHistory(datesForTransaction.getUserEmail());
+                transaction.addToAccountHistory(datesForTransaction.getIban());
                 break;
             case Constants.UPGRADE_PLAN_TRANSACTION:
                 transaction = new NewPlan(datesForTransaction.getDescription(),

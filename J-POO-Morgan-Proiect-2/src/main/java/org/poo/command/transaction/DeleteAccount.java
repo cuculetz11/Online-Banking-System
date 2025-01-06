@@ -5,6 +5,8 @@ import org.poo.command.debug.dto.AccountDeleteInfo;
 import org.poo.command.debug.dto.DebugActionsDTO;
 import org.poo.command.debug.dto.DeleteAccountDTO;
 import org.poo.command.debug.dto.ErrorPrint;
+import org.poo.entities.Bank;
+import org.poo.entities.bankAccount.Account;
 import org.poo.fileio.CommandInput;
 import org.poo.utils.Constants;
 import org.poo.utils.DatesForTransaction;
@@ -21,21 +23,7 @@ public class DeleteAccount implements Command {
         CheckAccountsPrecision checkAccountsPrecision = new CheckAccountsPrecision();
         BANKING_SERVICES.acceptVisitor(checkAccountsPrecision);
         AccountDeleteInfo data = null;
-
-        if (BANKING_SERVICES.removeAccount(input.getEmail(), input.getAccount())) {
-            data = new DeleteAccountDTO(Constants.ACCOUNT_DELETED, input.getTimestamp());
-        } else {
-            DatesForTransaction datesForTransaction =
-                    new DatesForTransaction.Builder(Constants.ACCOUNT_CANT_BE_DELETED_FUNDS,
-                            input.getTimestamp())
-                            .transactionName(Constants.DELETE_ACCOUNT_FAIL_TRANSACTION)
-                            .userEmail(input.getEmail())
-                            .build();
-            TransactionManager.generateAndAddTransaction(datesForTransaction);
-            data = new ErrorPrint(Constants.ACCOUNT_CANT_BE_DELETED, input.getTimestamp());
-        }
-        DebugActionsDTO<AccountDeleteInfo> wasAccountDeleted =
-                new DebugActionsDTO<>(input.getCommand(), data, input.getTimestamp());
-        JsonOutManager.getInstance().addToOutput(wasAccountDeleted);
+        Account account = Bank.getInstance().getAccounts().get(input.getAccount());
+        account.deleteAccount(input);
     }
 }

@@ -3,8 +3,12 @@ package org.poo.utils;
 import org.poo.command.CheckCardStatus;
 import org.poo.command.Command;
 import org.poo.command.SetMinBalance;
+import org.poo.command.business.AddNewBusinessAssociate;
+import org.poo.command.business.ChangeDepositLimit;
+import org.poo.command.business.ChangeSpendingLimit;
 import org.poo.command.debug.PrintTransaction;
 import org.poo.command.debug.PrintUsers;
+import org.poo.command.report.BusinessReport;
 import org.poo.command.report.Report;
 import org.poo.command.report.SpendingReport;
 import org.poo.command.transaction.*;
@@ -44,6 +48,11 @@ public final class CommandManager {
             case Constants.WITHDRAW_SAVINGS -> new WithdrawSavings();
             case Constants.UPGRADE_PLAN -> new UpgradePlan();
             case Constants.CASH_WITHDRAWAL -> new CashWithdrawal();
+            case Constants.ACCEPT_SPLITPAYMENT -> new AcceptSplitPayment();
+            case Constants.ADD_NEW_BUSINESS_ASSOCIATE -> new AddNewBusinessAssociate();
+            case Constants.CHANGE_DEPOSIT_LIMIT -> new ChangeDepositLimit();
+            case Constants.CHANGE_SPENDING_LIMIT -> new ChangeSpendingLimit();
+            case Constants.BUSINESS_REPORT -> new BusinessReport();
             default -> throw new IllegalArgumentException(Constants.COMMAND_NOT_FOUND_ERROR);
         };
     }

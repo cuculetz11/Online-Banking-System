@@ -7,11 +7,10 @@ import org.poo.entities.card.Card;
 import org.poo.entities.commerciant.Commerciant;
 import org.poo.entities.transaction.Transaction;
 import org.poo.entities.users.User;
+import org.poo.fileio.CommandInput;
+import org.poo.services.splitPayment.WaitingSplitPayment;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 @Getter
 public final class Bank {
@@ -23,8 +22,9 @@ public final class Bank {
     private Map<String, ArrayList<Transaction>> transactionHistory;
     private Map<String, Card> cardDeletedHistory;
     private Map<String, Commerciant> commerciants;
+    private Map<String, List<WaitingSplitPayment>> waitingSplitPayments;
     @Setter
-    private int currentTimestamp;
+    private CommandInput currentInput;
 
     private Bank() {
         users = new LinkedHashMap<>();
@@ -34,6 +34,7 @@ public final class Bank {
         cards = new HashMap<>();
         cardDeletedHistory = new HashMap<>();
         commerciants = new HashMap<>();
+        waitingSplitPayments = new HashMap<>();
     }
 
     /**
@@ -58,6 +59,7 @@ public final class Bank {
         cards = new HashMap<>();
         cardDeletedHistory = new HashMap<>();
         commerciants = new HashMap<>();
+        waitingSplitPayments = new HashMap<>();
     }
 
 }
