@@ -7,12 +7,21 @@ import org.poo.fileio.CommandInput;
 import org.poo.services.splitPayment.WaitingSplitPayment;
 import org.poo.utils.Constants;
 import org.poo.utils.DatesForTransaction;
+import org.poo.utils.ErrorManager;
 import org.poo.utils.TransactionManager;
 
 public class RejectSplitPayment implements Command {
     @Override
     public void execute(CommandInput input) {
+        if(!Bank.getInstance().getUsers().containsKey(input.getEmail())) {
+            ErrorManager.notFound(Constants.USER_NOT_FOUND,input.getCommand(), input.getTimestamp());
+            return;
+        }
         WaitingSplitPayment waitingSplitPayment = null;
+        if(Bank.getInstance().getWaitingSplitPayments().get(input.getSplitPaymentType()) == null) {
+            System.out.println("nu exitsa inca tipul asta de split");
+            return;
+        }
         for(WaitingSplitPayment w : Bank.getInstance().getWaitingSplitPayments().get(input.getSplitPaymentType())) {
             if(w.getRemainedPayments().contains(input.getEmail())) {
                 waitingSplitPayment = w;
@@ -20,7 +29,8 @@ public class RejectSplitPayment implements Command {
             }
         }
         if(waitingSplitPayment == null) {
-            System.out.println("problema la cautarea in lista de split");
+//            System.out.println("nu e userul aici");
+            //ErrorManager.notFound(Constants.USER_NOT_FOUND,input.getCommand(), input.getTimestamp());
             return;
         }
         for(int i = 0 ; i < waitingSplitPayment.getCommandInput().getAccounts().size(); i++) {

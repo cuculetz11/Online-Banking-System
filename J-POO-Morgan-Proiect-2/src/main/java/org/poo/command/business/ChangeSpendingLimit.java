@@ -4,9 +4,10 @@ import org.poo.command.Command;
 import org.poo.command.debug.dto.DebugActionsDTO;
 import org.poo.entities.Bank;
 import org.poo.entities.bankAccount.Account;
-import org.poo.entities.bankAccount.BussinessAccount;
+import org.poo.entities.bankAccount.BusinessAccount;
 import org.poo.entities.transaction.Transaction;
 import org.poo.fileio.CommandInput;
+import org.poo.utils.ErrorManager;
 import org.poo.utils.JsonOutManager;
 
 public class ChangeSpendingLimit implements Command {
@@ -18,15 +19,14 @@ public class ChangeSpendingLimit implements Command {
             return;
         }
         if(!account.getType().equals("business")) {
-            System.out.println("Account type is not business");
+            ErrorManager.notFound("This is not a business account",input.getCommand(), input.getTimestamp());
             return;
         }
-        BussinessAccount businessAccount = (BussinessAccount) account;
+        BusinessAccount businessAccount = (BusinessAccount) account;
         if(!businessAccount.getUser().getEmail().equals(input.getEmail())) {
             Transaction err = new Transaction(input.getTimestamp(), "You must be owner in order to change spending limit.");
             DebugActionsDTO<Transaction> debugActionsDTO = new DebugActionsDTO<>(input.getCommand(), err, input.getTimestamp());
             JsonOutManager.getInstance().addToOutput(debugActionsDTO);
-
             return;
         }
         businessAccount.setPayLimit(input.getAmount());

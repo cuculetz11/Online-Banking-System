@@ -1,7 +1,10 @@
 package org.poo.entities.transaction;
 
+import lombok.Getter;
+
 import java.util.List;
 
+@Getter
 public class SplitPaymentEq extends Transaction {
     private final String currency;
     private double amount;

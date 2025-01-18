@@ -11,8 +11,8 @@ import org.poo.utils.observer.CheckAccountsPrecision;
 public class BusinessReport implements Command {
     @Override
     public void execute(CommandInput input) {
-        CheckAccountsPrecision checkAccountsPrecision = new CheckAccountsPrecision();
-        BANKING_SERVICES.acceptVisitor(checkAccountsPrecision);
+//        CheckAccountsPrecision checkAccountsPrecision = new CheckAccountsPrecision();
+//        BANKING_SERVICES.acceptVisitor(checkAccountsPrecision);
         Account account = Bank.getInstance().getAccounts().get(input.getAccount());
         if (account == null) {
             ErrorManager.notFound(Constants.ACCOUNT_NOT_FOUND, input.getCommand(),

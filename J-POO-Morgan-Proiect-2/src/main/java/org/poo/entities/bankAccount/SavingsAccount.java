@@ -24,13 +24,6 @@ public class SavingsAccount extends Account {
         this.interestRate = input.getInterestRate();
     }
 
-    @Override
-    public String isTransferPossible(double amount) {
-        if(this.getBalance() < (amount + this.getUser().getPlan().getCommissionPlan().commission(amount, getCurrency()))) {
-            return Constants.TRANSACTION_IMPOSSIBLE;
-        }
-        return "";
-    }
 
     /**
      * {@inheritDoc}
@@ -45,6 +38,7 @@ public class SavingsAccount extends Account {
                         .userEmail(this.getUser().getEmail())
                         .amount(this.getBalance() * this.getInterestRate())
                         .currency(this.getCurrency())
+                        .iban(this.getIban())
                         .build();
         TransactionManager.generateAndAddTransaction(datesForTransaction);
 
@@ -65,6 +59,7 @@ public class SavingsAccount extends Account {
                                 + input.getInterestRate(), input.getTimestamp())
                         .transactionName(Constants.CHANGE_INTEREST_RATE_TRANSACTION)
                         .userEmail(this.getUser().getEmail())
+                        .iban(this.getIban())
                         .build();
         TransactionManager.generateAndAddTransaction(datesForTransaction);
     }
@@ -84,6 +79,8 @@ public class SavingsAccount extends Account {
 
     @Override
     public void deposit(CommandInput input) {
+        if(!input.getEmail().equals(this.getUser().getEmail()))
+            return;
         setBalance(getBalance() + input.getAmount());
     }
 
@@ -100,6 +97,8 @@ public class SavingsAccount extends Account {
         String iban = Bank.getInstance().getCards().get(input.getCardNumber()).getAccount()
                 .getIban();
         BankingServices bankingServices = new BankingServices();
+        if(this.getBalance() != 0)
+            return;
         bankingServices.deleteCard(this, input.getCardNumber());
 
         DatesForTransaction datesForTransaction =
@@ -116,7 +115,7 @@ public class SavingsAccount extends Account {
     @Override
     public void deleteAccount(CommandInput input) {
         AccountDeleteInfo data = null;
-        if(this.getBalance() > 0) {
+        if(this.getBalance() > 0 || !this.getUser().getEmail().equals(input.getEmail())) {
             DatesForTransaction datesForTransaction =
                     new DatesForTransaction.Builder(Constants.ACCOUNT_CANT_BE_DELETED_FUNDS,
                             input.getTimestamp())
@@ -142,5 +141,10 @@ public class SavingsAccount extends Account {
         DebugActionsDTO<AccountDeleteInfo> wasAccountDeleted =
                 new DebugActionsDTO<>(input.getCommand(), data, input.getTimestamp());
         JsonOutManager.getInstance().addToOutput(wasAccountDeleted);
+    }
+
+    @Override
+   public void withdrawMoney(final double money) {
+        setBalance(getBalance() - money);
     }
 }

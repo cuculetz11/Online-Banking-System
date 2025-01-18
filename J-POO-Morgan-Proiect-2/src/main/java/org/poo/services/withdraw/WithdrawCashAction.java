@@ -4,6 +4,7 @@ import org.poo.entities.Bank;
 import org.poo.entities.CurrencyPair;
 import org.poo.entities.bankAccount.Account;
 import org.poo.entities.card.Card;
+import org.poo.entities.users.User;
 import org.poo.fileio.CommandInput;
 import org.poo.services.payment.PaymentStrategy;
 import org.poo.utils.Constants;
@@ -29,9 +30,13 @@ public class WithdrawCashAction implements PaymentStrategy {
                 return true;
             }
             this.cardAccount = card.getAccount();
-            if(!card.getAccount().getUser().getEmail().equals(input.getEmail())) {
-                ErrorManager.notFound(Constants.USER_NOT_FOUND,input.getCommand(),
-                        input.getTimestamp());
+            User user = Bank.getInstance().getUsers().get(input.getEmail());
+            if (user == null) {
+                ErrorManager.notFound(Constants.USER_NOT_FOUND, input.getCommand(), input.getTimestamp());
+                return true;
+            }
+            if(!cardAccount.checkPropriety(input.getEmail())) {
+                ErrorManager.notFound(Constants.CARD_NOT_FOUND, input.getCommand(), input.getTimestamp());
                 return true;
             }
             if(card.getStatus().equals("frozen")) {

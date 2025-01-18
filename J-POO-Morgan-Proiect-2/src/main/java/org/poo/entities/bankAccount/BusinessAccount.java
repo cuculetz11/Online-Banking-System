@@ -1,12 +1,13 @@
 package org.poo.entities.bankAccount;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.poo.command.debug.dto.*;
 import org.poo.entities.Bank;
 import org.poo.entities.CurrencyPair;
 import org.poo.entities.card.Card;
-import org.poo.entities.transaction.Transaction;
+import org.poo.entities.commerciant.CommerciantBusinessInfo;
 import org.poo.entities.users.User;
 import org.poo.entities.users.UserBusinessInfo;
 import org.poo.fileio.CommandInput;
@@ -20,23 +21,31 @@ import java.util.*;
  * Userul este ownerul acestui cont
  */
 @Getter
-public class BussinessAccount extends Account {
+public class BusinessAccount extends Account {
+    @JsonIgnore
     private LinkedHashSet<String> managers;
+    @JsonIgnore
     private LinkedHashSet<String> employees;
-    private HashMap<String, List<UserBusinessInfo>> transactionHistoryWorkers;
+    @JsonIgnore
+    private TreeMap<String, List<UserBusinessInfo>> transactionHistoryWorkers;
+    @JsonIgnore
+    private ArrayList<CommerciantBusinessInfo> transactionHistoryCommerciants;
+    @JsonIgnore
     @Setter
     private double payLimit;
+    @JsonIgnore
     @Setter
     private double depositLimit;
 
-    public BussinessAccount(CommandInput input) {
+    public BusinessAccount(CommandInput input) {
         super(0, input.getCurrency(), input.getAccountType());
         managers = new LinkedHashSet<>();
         employees = new LinkedHashSet<>();
         CurrencyExchangeService currencyExchangeService = new CurrencyExchangeService();
-        payLimit = Math.round(currencyExchangeService.exchangeCurrency(new CurrencyPair("RON", input.getCurrency()),500) * 100) / 100.0;
+        payLimit = currencyExchangeService.exchangeCurrency(new CurrencyPair("RON", input.getCurrency()),500);
         depositLimit = payLimit;
-        transactionHistoryWorkers = new HashMap<>();
+        transactionHistoryWorkers = new TreeMap<>();
+        transactionHistoryCommerciants = new ArrayList<>();
     }
 
     @Override
@@ -116,11 +125,48 @@ public class BussinessAccount extends Account {
                     new BusinessReportTransaction(this.getIban(),input.getType(),this.getBalance(),this.getCurrency(),this.payLimit, this.depositLimit,manager,employee,total_spent,total_deposit);
             DebugActionsDTO<BusinessReportTransaction> debugActionsDTO = new DebugActionsDTO<>(input.getCommand(),businessReportTransaction, input.getTimestamp());
             JsonOutManager.getInstance().addToOutput(debugActionsDTO);
+        } else if(input.getType().equals(Constants.COMMERCIANT)) {
+            TreeMap<String, CommerciantDTO> totalReceivedPerCommerciant = new TreeMap<>();
+            Set<String> employee = new TreeSet<>();
+            Set<String> manager = new TreeSet<>();
+
+            for(CommerciantBusinessInfo c : transactionHistoryCommerciants) {
+                if(c.getTimestamp() > input.getEndTimestamp()) {
+                    break;
+                }
+                if(c.getTimestamp() >= input.getStartTimestamp()) {
+                    if(getUser().getEmail().equals(c.getUserEmail())) {
+                        continue;
+                    }
+                    totalReceivedPerCommerciant.putIfAbsent(c.getCommerciantName(), new CommerciantDTO(c.getCommerciantName(),0,new ArrayList<>(),new ArrayList<>()));
+                    totalReceivedPerCommerciant.get(c.getCommerciantName()).addMoney(c.getAmount());
+
+                    if(employees.contains(c.getUserEmail())) {
+                        User user = Bank.getInstance().getUsers().get(c.getUserEmail());
+                        String name = user.getLastName() + " " + user.getFirstName();
+                        totalReceivedPerCommerciant.get(c.getCommerciantName()).addEmployer(name);
+                    }
+                    if(managers.contains(c.getUserEmail())) {
+                        User user = Bank.getInstance().getUsers().get(c.getUserEmail());
+                        String name = user.getLastName() + " " + user.getFirstName();
+                        totalReceivedPerCommerciant.get(c.getCommerciantName()).addManger(name);
+                    }
+                }
+            }
+            ArrayList<CommerciantDTO> commerciantDTOS = new ArrayList<>();
+            for(CommerciantDTO info : totalReceivedPerCommerciant.values()) {
+               commerciantDTOS.add(info);
+            }
+            BusinessReportCommerciant businessReportCommerciant = new BusinessReportCommerciant(this.getIban(), getBalance(), this.getCurrency(), this.payLimit, this.depositLimit, commerciantDTOS, "commerciant");
+            DebugActionsDTO<BusinessReportCommerciant> debugActionsDTO = new DebugActionsDTO<>(input.getCommand(),businessReportCommerciant, input.getTimestamp());
+            JsonOutManager.getInstance().addToOutput(debugActionsDTO);
         }
     }
 
     @Override
     public void deposit(CommandInput input) {
+        if(!checkPropriety(input.getEmail()))
+            return;
         if(employees.contains(input.getEmail()) && depositLimit < input.getAmount()) {
             return;
         }
@@ -153,6 +199,8 @@ public class BussinessAccount extends Account {
         String iban = Bank.getInstance().getCards().get(input.getCardNumber()).getAccount()
                 .getIban();
         BankingServices bankingServices = new BankingServices();
+        if(this.getBalance() != 0)
+            return;
         bankingServices.deleteCard(this, input.getCardNumber());
 
 
@@ -207,7 +255,26 @@ public class BussinessAccount extends Account {
         CommandInput input = Bank.getInstance().getCurrentInput();
         transactionHistoryWorkers.computeIfAbsent(input.getEmail(), k -> new ArrayList<>());
         transactionHistoryWorkers.get(input.getEmail()).add(new UserBusinessInfo(input.getTimestamp(), amount, 0));
-
-
+        if(input.getCommand().equals(Constants.SEND_MONEY)) {
+            if(Bank.getInstance().getCommerciants().containsKey(input.getReceiver())) {
+                transactionHistoryCommerciants.add(new CommerciantBusinessInfo(input.getTimestamp(), input.getEmail(), amount, Bank.getInstance().getCommerciants().get(input.getReceiver()).getCommerciant()));
+            }
+        }
+        if(input.getCommand().equals(Constants.PAY_ONLINE)) {
+            transactionHistoryCommerciants.add(new CommerciantBusinessInfo(input.getTimestamp(), input.getEmail(), amount,  Bank.getInstance().getCommerciants().get(input.getCommerciant()).getCommerciant()));
+        }
+    }
+    @Override
+    public boolean checkPropriety(String email) {
+        if(super.checkPropriety(email)) {
+            return true;
+        }
+        if(employees.contains(email)) {
+            return true;
+        }
+        if(managers.contains(email)) {
+            return true;
+        }
+        return false;
     }
 }

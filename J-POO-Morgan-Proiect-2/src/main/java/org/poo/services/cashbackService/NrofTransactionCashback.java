@@ -18,24 +18,31 @@ public class NrofTransactionCashback implements CashbackStrategy{
     private String typeProduce;
     private final double transactionAmount;
     private String accountCurrency;
+    private String commerciantName;
 
     public NrofTransactionCashback(double transactionAmount) {
         this.transactionAmount = transactionAmount;
     }
     @Override
     public boolean check(Commerciant commerciant, Account account) {
+        commerciantName = commerciant.getCommerciant();
         accountCurrency = account.getCurrency();
+        if(!commerciantType.containsKey(commerciant.getType())){
+            return true;
+        }
         if(account.getUsedCashback().contains(commerciant.getType())) {
             return true;
         }
-        if(!account.getCashback().containsKey(commerciant.getType())) {
-            return true;
-        }
-        if(account.getCashback().get(cashbackType) < commerciantType.get(commerciant.getType())) {
+
+       int maxNrOfTransactions = 0;
+        for(int i : account.getCashbackNrOfTransactions().values())
+            maxNrOfTransactions = Math.max(maxNrOfTransactions, i);
+        if(maxNrOfTransactions < commerciantType.get(commerciant.getType())) {
             return true;
         }
         account.getUsedCashback().add(commerciant.getType());
         typeProduce = commerciant.getType();
+
         return false;
     }
 
@@ -50,9 +57,9 @@ public class NrofTransactionCashback implements CashbackStrategy{
 
     @Override
     public void updateCashback(Account account) {
-        if(!account.getCashback().containsKey(cashbackType)) {
-            account.getCashback().put(cashbackType, 1.0);
+        if(!account.getCashbackNrOfTransactions().containsKey(commerciantName)) {
+            account.getCashbackNrOfTransactions().put(commerciantName, 0);
         }
-        account.getCashback().put(cashbackType, account.getCashback().get(cashbackType) + 1);
+        account.getCashbackNrOfTransactions().put(commerciantName, account.getCashbackNrOfTransactions().get(commerciantName) + 1);
     }
 }

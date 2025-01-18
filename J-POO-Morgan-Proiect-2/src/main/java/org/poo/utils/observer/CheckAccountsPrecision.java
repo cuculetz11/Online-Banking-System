@@ -7,8 +7,8 @@ import org.poo.services.BankMethods;
 public class CheckAccountsPrecision implements BankMethods {
     @Override
     public void visit(Bank bank) {
-        for(Account account : bank.getAccounts().values()) {
-            account.checkBalancePrecision();
-        }
+//        for(Account account : bank.getAccounts().values()) {
+//            account.checkBalancePrecision();
+//        }
     }
 }

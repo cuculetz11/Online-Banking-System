@@ -18,6 +18,7 @@ public class CommerciantInitialize implements BankMethods {
             Commerciant commerciant = new Commerciant(commerciantInput);
             bank.getCommerciants().put(commerciant.getCommerciant(), commerciant);
             bank.getCommerciants().put(commerciant.getAccount(), commerciant);
+            bank.getCommerciants().put(String.valueOf(commerciant.getId()), commerciant);
         }
     }
 }

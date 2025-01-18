@@ -28,7 +28,7 @@ public class BankTransferStrategy implements PaymentStrategy {
                 return true;
             }
             Account receiverAccount = Bank.getInstance().getAccounts().get(input.getReceiver());
-            if (receiverAccount == null) {
+            if (receiverAccount == null && !Bank.getInstance().getCommerciants().containsKey(input.getReceiver())) {
                 ErrorManager.notFound(Constants.USER_NOT_FOUND, input.getCommand(), input.getTimestamp());
                 return true;
             }
@@ -56,39 +56,42 @@ public class BankTransferStrategy implements PaymentStrategy {
             this.sender = senderAccount;
             this.amount = input.getAmount();
 
-            if(Bank.getInstance().getCommerciants().containsKey(receiver.getIban())) {
-                Commerciant commerciant = Bank.getInstance().getCommerciants().get(senderAccount.getIban());
+            if(Bank.getInstance().getCommerciants().containsKey(input.getReceiver())) {
+                Commerciant commerciant = Bank.getInstance().getCommerciants().get(input.getReceiver());
                 sender.getUser().getPlan().setCashBackContext(new CashBackContext(commerciant, sender, amount));
             }
-            sender.getUser().getPlan().checkUpdate(amount, sender.getCurrency());
+
             String money = input.getAmount() + " " + sender.getCurrency();
             DatesForTransaction datesForTransactionSender =
                     new DatesForTransaction.Builder(input.getDescription(), input.getTimestamp())
                             .transactionName(Constants.TRANSFER_TRANSACTION)
                             .iban(sender.getIban())
                             .senderIban(sender.getIban())
-                            .receiverIban(receiver.getIban())
+                            .receiverIban(input.getReceiver())
                             .userEmail(sender.getUser().getEmail())
                             .money(money)
                             .transferType(Constants.SENT)
                             .build();
             TransactionManager.generateAndAddTransaction(datesForTransactionSender);
+            double exchangedAmount = amount;
+            //adauga tranzaqctia la cel ce a primit banii
+            if(receiverAccount != null) {
+                exchangedAmount = CURRENCY_EXCHANGE_SERVICE.exchangeCurrency(new
+                        CurrencyPair(sender.getCurrency(), receiver.getCurrency()), amount);
+                String exchangedMoney = exchangedAmount + " " + receiver.getCurrency();
 
-            double exchangedAmount = CURRENCY_EXCHANGE_SERVICE.exchangeCurrency(new
-                    CurrencyPair(sender.getCurrency(), receiver.getCurrency()), amount);
-            String exchangedMoney = exchangedAmount + " " + receiver.getCurrency();
-
-            DatesForTransaction datesForTransactionReceiver =
-                    new DatesForTransaction.Builder(input.getDescription(), input.getTimestamp())
-                            .transactionName(Constants.TRANSFER_TRANSACTION)
-                            .iban(receiver.getIban())
-                            .senderIban(sender.getIban())
-                            .receiverIban(receiver.getIban())
-                            .userEmail(receiver.getUser().getEmail())
-                            .money(exchangedMoney)
-                            .transferType(Constants.RECEIVED)
-                            .build();
-            TransactionManager.generateAndAddTransaction(datesForTransactionReceiver);
+                DatesForTransaction datesForTransactionReceiver =
+                        new DatesForTransaction.Builder(input.getDescription(), input.getTimestamp())
+                                .transactionName(Constants.TRANSFER_TRANSACTION)
+                                .iban(receiver.getIban())
+                                .senderIban(sender.getIban())
+                                .receiverIban(receiver.getIban())
+                                .userEmail(receiver.getUser().getEmail())
+                                .money(exchangedMoney)
+                                .transferType(Constants.RECEIVED)
+                                .build();
+                TransactionManager.generateAndAddTransaction(datesForTransactionReceiver);
+            }
             return false;
         } catch (IllegalArgumentException e) {
             System.err.println("Error: " + e.getMessage());
@@ -97,7 +100,7 @@ public class BankTransferStrategy implements PaymentStrategy {
     }
 
     /**
-     * Transfer-ul bancar
+     * Transferul bancar
      */
     @Override
     public void pay() {

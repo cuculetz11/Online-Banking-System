@@ -32,6 +32,10 @@ public class DeleteCard implements Command {
             if (cardHolder == null) {
                 throw new IllegalArgumentException("Contul nu exista: " + input.getCardNumber());
             }
+            if(!cardHolder.checkPropriety(input.getEmail())) {
+                System.out.println("proprietate proasta");
+                return;
+            }
             cardHolder.deleteCard(input);
         } catch (Exception e) {
             System.err.println(e.getMessage());

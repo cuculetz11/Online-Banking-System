@@ -23,12 +23,25 @@ public class CardPaymentStrategy implements PaymentStrategy {
     @Override
     public boolean checkForErrors(final CommandInput input) {
         Card cardInput = Bank.getInstance().getCards().get(input.getCardNumber());
+        //System.out.println("cardul e: "+  cardInput + " proprietarul e: " + cardInput.getCardOwnerEmail() + " emailul din comanda: " + input.getEmail() );
         if(input.getAmount() == 0) {
             return true;
         }
         if (cardInput == null) {
             ErrorManager.notFound(Constants.CARD_NOT_FOUND, input.getCommand(),
                     input.getTimestamp());
+            return true;
+        }
+        if(!cardInput.getAccount().getType().equals("business") && !input.getEmail().equals(cardInput.getCardOwnerEmail())) {
+            ErrorManager.notFound(Constants.CARD_NOT_FOUND, input.getCommand(),
+                    input.getTimestamp());
+            System.out.println("aici");
+            return true;
+        }
+        if(!cardInput.getAccount().checkPropriety(input.getEmail())) {
+            ErrorManager.notFound(Constants.CARD_NOT_FOUND, input.getCommand(),
+                    input.getTimestamp());
+            System.out.println("aici");
             return true;
         }
         this.card = cardInput;
@@ -65,22 +78,18 @@ public class CardPaymentStrategy implements PaymentStrategy {
             return true;
         }
         this.amountToPay = amount;
-        Commerciant commerciant = Bank.getInstance().getCommerciants().get(input.getCommerciant());
-
-        card.getAccount().getUser().getPlan().setCashBackContext(new CashBackContext(commerciant, card.getAccount(), amountToPay));
-        card.getAccount().getUser().getPlan().checkUpdate(amount,card.getAccount().getCurrency());
-
         DatesForTransaction datesForTransaction =
                 new DatesForTransaction.Builder(Constants.CARD_PAYMENT, input.getTimestamp())
                         .transactionName(Constants.CARD_PAYMENT_TRANSACTION)
                         .commerciant(input.getCommerciant())
                         .userEmail(input.getEmail())
                         .iban(cardInput.getAccount().getIban())
-                        .amount(Math.round(amount * 100) / 100.0)
+                        .amount(amount)
                         .build();
         TransactionManager.generateAndAddTransaction(datesForTransaction);
-        Transaction transaction = new CardPayment(amount, input.getCommerciant(),
-                input.getTimestamp(), Constants.CARD_PAYMENT);
+        Commerciant commerciant = Bank.getInstance().getCommerciants().get(input.getCommerciant());
+        card.getAccount().getUser().getPlan().checkUpdate(amount,card.getAccount().getCurrency(), card.getAccount());
+        card.getAccount().getUser().getPlan().setCashBackContext(new CashBackContext(commerciant, card.getAccount(), amountToPay));
         return false;
     }
 

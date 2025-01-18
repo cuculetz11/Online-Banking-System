@@ -42,7 +42,7 @@ public class SpendingThresholdCashback implements CashbackStrategy{
     @Override
     public boolean check(Commerciant commerciant, Account account) {
         accountCurrency = account.getCurrency();
-        double amount = account.getCashback().get(cashbackType);
+        double amount = account.getCashbackSpending();
         if(amount < 100) {
             return true;
         }
@@ -53,10 +53,7 @@ public class SpendingThresholdCashback implements CashbackStrategy{
         } else if(amount >= 500) {
             threshold = 500;
         }
-//        if(account.getUsedCashback().contains(String.valueOf(threshold))) {
-//            return true;
-//        }
-        account.getUsedCashback().add(String.valueOf(threshold));
+
         return false;
     }
 
@@ -70,10 +67,6 @@ public class SpendingThresholdCashback implements CashbackStrategy{
 
     @Override
     public void updateCashback(Account account) {
-        if(!account.getCashback().containsKey(cashbackType)) {
-            account.getCashback().put(cashbackType,transactionAmount);
-            return;
-        }
-        account.getCashback().put(cashbackType,account.getCashback().get(cashbackType) + transactionAmount);
+        account.setCashbackSpending(account.getCashbackSpending() + transactionAmount);
     }
 }

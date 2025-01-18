@@ -63,6 +63,7 @@ public final  class Constants {
     public static final String DONT_HAVE_CLASSIC = "You do not have a classic account.";
     public static final String TRANSACTION_IMPOSSIBLE = "Transaction impossible";
     public static final String LIMIT_EXCEEDED = "Limit exceeded";
+    public static final String SAVINGS_WITHDRAWAL = "Savings withdrawal";
 
     //---------------------------
     public static final String ADD_ACCOUNT_TRANSACTION =
@@ -93,6 +94,8 @@ public final  class Constants {
             "CheckCardTransaction";
     public static final String CASH_WITHDRAWAL_TRANSACTION =
             "CashWithdrawalTransaction";
+    public static final String Savings_WITHDRAWAL_TRANSACTION =
+            "SavingsWithdrawalTransaction";
     public static final String MIN_AGE_TRANSACTION = "MinAgeTransaction";
     public static final String PLAN_ALREADY_TRANSACTION = "PlanAlreadyTransaction";
     public static final String UPGRADE_PLAN_TRANSACTION = "UpgradePlanTransaction";

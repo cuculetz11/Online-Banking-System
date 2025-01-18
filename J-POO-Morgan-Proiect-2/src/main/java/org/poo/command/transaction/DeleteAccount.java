@@ -20,8 +20,8 @@ public class DeleteAccount implements Command {
      * @param input obiectul ce contine informatiile ncesare pentru a efectua comanda
      */
     public void execute(final CommandInput input) {
-        CheckAccountsPrecision checkAccountsPrecision = new CheckAccountsPrecision();
-        BANKING_SERVICES.acceptVisitor(checkAccountsPrecision);
+//        CheckAccountsPrecision checkAccountsPrecision = new CheckAccountsPrecision();
+//        BANKING_SERVICES.acceptVisitor(checkAccountsPrecision);
         AccountDeleteInfo data = null;
         Account account = Bank.getInstance().getAccounts().get(input.getAccount());
         account.deleteAccount(input);

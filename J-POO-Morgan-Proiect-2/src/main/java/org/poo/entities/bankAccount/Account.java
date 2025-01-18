@@ -10,6 +10,7 @@ import org.poo.entities.transaction.Transaction;
 import org.poo.entities.users.User;
 import org.poo.fileio.CommandInput;
 import org.poo.services.CurrencyExchangeService;
+import org.poo.utils.Constants;
 import org.poo.utils.Utils;
 import org.poo.utils.observer.BalanceObserverPrecision;
 
@@ -36,7 +37,10 @@ public abstract class Account implements BalanceObserverPrecision {
     private ArrayList<Transaction> transactionsHistory;
     @Getter
     @JsonIgnore
-    private HashMap<String, Double> cashback;
+    private double cashbackSpending;
+    @Getter
+    @JsonIgnore
+    private HashMap<String, Integer> cashbackNrOfTransactions;
     @Getter
     @JsonIgnore
     private HashSet<String> usedCashback;
@@ -49,8 +53,9 @@ public abstract class Account implements BalanceObserverPrecision {
         this.cards = new LinkedHashMap<>();
         this.minimumBalance = 0;
         this.transactionsHistory = new ArrayList<>();
-        this.cashback = new HashMap<>();
         this.usedCashback = new HashSet<>();
+        this.cashbackNrOfTransactions = new HashMap<>();
+        this.cashbackSpending = 0;
     }
 
     /**
@@ -60,11 +65,15 @@ public abstract class Account implements BalanceObserverPrecision {
      */
     public void transfer(final Account receiver, final double amount) {
         pay(amount);
-        CurrencyPair currencyPair = new CurrencyPair(this.currency, receiver.getCurrency());
-        CurrencyExchangeService currencyExchangeService = new CurrencyExchangeService();
-        double exchangedAmount = currencyExchangeService
-                .exchangeCurrency(currencyPair, amount);
-        receiver.setBalance(receiver.getBalance() + exchangedAmount);
+        if (receiver != null) {
+            CurrencyPair currencyPair = new CurrencyPair(this.currency, receiver.getCurrency());
+            CurrencyExchangeService currencyExchangeService = new CurrencyExchangeService();
+            double exchangedAmount = currencyExchangeService
+                    .exchangeCurrency(currencyPair, amount);
+            receiver.setBalance(receiver.getBalance() + exchangedAmount);
+        } else {
+            this.getUser().getPlan().checkUpdate(amount, this.getCurrency(), this);
+        }
     }
 
     /**
@@ -85,7 +94,12 @@ public abstract class Account implements BalanceObserverPrecision {
 
     /**
      */
-    public abstract String isTransferPossible(final double amount);
+    public String isTransferPossible(final double amount) {
+        if(!(this.getBalance() >= (amount + this.getUser().getPlan().getCommissionPlan().commission(amount, getCurrency())))) {
+            return Constants.TRANSACTION_IMPOSSIBLE;
+        }
+        return "";
+    }
 
     /**
      * Adauga dobanda obtinuta la suma din contul dat(trebuie sa fie de economii contul)
@@ -139,8 +153,31 @@ public abstract class Account implements BalanceObserverPrecision {
         return cards;
     }
 
-    @Override
-    public void checkBalancePrecision() {
-        this.balance = Math.round(this.balance * 100.0) / 100.0;
+    public void addMoney(double amount, String currency) {
+        CurrencyExchangeService currencyExchangeService = new CurrencyExchangeService();
+        amount = currencyExchangeService.exchangeCurrency(new CurrencyPair(currency, this.getCurrency()), amount);
+        this.setBalance(this.getBalance() + amount);
     }
+    public void withdrawMoney(double amount) {
+        this.setBalance(this.getBalance() - amount - this.getUser().getPlan().getCommissionPlan().commission(amount, currency));
+    }
+    public void paySplit(double amount) {
+        this.setBalance(this.getBalance() - amount);
+    }
+    public boolean isTransferPossibleWhCommision(final double amount) {
+        if(this.getBalance() >= amount ) {
+            return true;
+        }
+        return false;
+    }
+    public boolean checkPropriety(String email) {
+        if(!this.getUser().getEmail().equals(email)) {
+            return false;
+        }
+        return true;
+    }
+//    @Override
+//    public void checkBalancePrecision() {
+//        this.balance = Math.round(this.balance * 100000.0) / 100000.0;
+//    }
 }

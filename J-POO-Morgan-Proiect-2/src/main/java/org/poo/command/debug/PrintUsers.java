@@ -17,8 +17,8 @@ public class PrintUsers implements Command {
      */
     @Override
     public void execute(final CommandInput input) {
-        CheckAccountsPrecision checkAccountsPrecision = new CheckAccountsPrecision();
-        BANKING_SERVICES.acceptVisitor(checkAccountsPrecision);
+//        CheckAccountsPrecision checkAccountsPrecision = new CheckAccountsPrecision();
+//        BANKING_SERVICES.acceptVisitor(checkAccountsPrecision);
         ArrayList<User> users = new ArrayList<>(Bank.getInstance().getUsers().values());
         DebugDTO<User> printUsers = new DebugDTO<User>(input.getCommand(),
                 users, input.getTimestamp());

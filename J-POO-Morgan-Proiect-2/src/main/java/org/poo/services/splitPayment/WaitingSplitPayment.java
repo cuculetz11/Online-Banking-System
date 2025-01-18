@@ -42,17 +42,16 @@ public class WaitingSplitPayment {
             amountsPerUser = commandInput.getAmountForUsers();
         }
         amounts = amountsPerUser;
-        String result = null;
         for(int i = 0; i < amountsPerUser.size(); i++) {
            Account account = Bank.getInstance().getAccounts().get(commandInput.getAccounts().get(i));
            double amount = amountsPerUser.get(i);
            CurrencyExchangeService currencyExchangeService = new CurrencyExchangeService();
            amount = currencyExchangeService.exchangeCurrency(new CurrencyPair(commandInput.getCurrency(), account.getCurrency()), amount);
-           if (account.isTransferPossible(amount).equals(Constants.TRANSACTION_IMPOSSIBLE)) {
-               result = account.getIban();
+           if (!account.isTransferPossibleWhCommision(amount)) {
+               return account.getIban();
            }
        }
-        return result;
+        return null;
     }
 
     public void processPayment() {
@@ -80,7 +79,7 @@ public class WaitingSplitPayment {
                 double amount = amounts.get(i);
                 CurrencyExchangeService currencyExchangeService = new CurrencyExchangeService();
                 amount = currencyExchangeService.exchangeCurrency(new CurrencyPair(commandInput.getCurrency(), account.getCurrency()), amount);
-                account.pay(amount);
+                account.paySplit(amount);
                 DatesForTransaction datesForTransaction =
                         new DatesForTransaction.Builder("Split payment of " + String.format("%.2f", commandInput.getAmount()) + " " + commandInput.getCurrency(), commandInput.getTimestamp())
                                 .transactionName(Constants.SPLIT_PAYMENT_TRANSACTION)

@@ -31,9 +31,10 @@ public class UpgradePlan implements Command {
         if(planToValue.get(account.getUser().getPlan().getPlanType()) == planToValue.get(input.getNewPlanType())) {
             DatesForTransaction datesForTransaction =
                     new DatesForTransaction.Builder("The user already has the " + input.getNewPlanType()
-                            + "plan.", input.getTimestamp())
+                            + " plan.", input.getTimestamp())
                             .transactionName(Constants.PLAN_ALREADY_TRANSACTION)
                             .userEmail(account.getUser().getEmail())
+                            .iban(account.getIban())
                             .build();
             TransactionManager.generateAndAddTransaction(datesForTransaction);
             return;
@@ -43,6 +44,7 @@ public class UpgradePlan implements Command {
                     new DatesForTransaction.Builder("You cannot downgrade your plan.", input.getTimestamp())
                             .transactionName(Constants.PLAN_ALREADY_TRANSACTION)
                             .userEmail(account.getUser().getEmail())
+                            .iban(account.getIban())
                             .build();
             TransactionManager.generateAndAddTransaction(datesForTransaction);
             return;

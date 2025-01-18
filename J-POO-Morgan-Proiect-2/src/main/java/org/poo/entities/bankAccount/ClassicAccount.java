@@ -18,13 +18,6 @@ public class ClassicAccount extends Account {
         super(0, input.getCurrency(), "classic");
     }
 
-    @Override
-    public String isTransferPossible(double amount) {
-        if(!(this.getBalance() >= (amount + this.getUser().getPlan().getCommissionPlan().commission(amount, getCurrency())))) {
-            return Constants.TRANSACTION_IMPOSSIBLE;
-        }
-        return "";
-    }
 
     /**
      * {@inheritDoc}
@@ -90,6 +83,8 @@ public class ClassicAccount extends Account {
 
     @Override
     public void deposit(CommandInput input) {
+        if(!input.getEmail().equals(this.getUser().getEmail()))
+            return;
         setBalance(getBalance() + input.getAmount());
     }
 
@@ -107,6 +102,8 @@ public class ClassicAccount extends Account {
 
         String iban = Bank.getInstance().getCards().get(input.getCardNumber()).getAccount()
                 .getIban();
+        if(this.getBalance() != 0)
+            return;
         bankingServices.deleteCard(this, input.getCardNumber());
 
         DatesForTransaction datesForTransaction =
