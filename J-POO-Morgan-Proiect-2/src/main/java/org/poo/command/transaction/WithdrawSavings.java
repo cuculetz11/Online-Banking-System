@@ -5,7 +5,7 @@ import org.poo.fileio.CommandInput;
 import org.poo.services.BankMethods;
 import org.poo.services.payment.PaymentMethod;
 import org.poo.services.payment.PaymentStrategy;
-import org.poo.services.withdraw.WithdrawSavingsAction;
+import org.poo.services.withdraw.WithdrawSavingsStrategy;
 
 public class WithdrawSavings implements Command {
     /**
@@ -14,7 +14,7 @@ public class WithdrawSavings implements Command {
      */
     @Override
     public void execute(final CommandInput input) {
-        PaymentStrategy withdrawSavings = new WithdrawSavingsAction();
+        PaymentStrategy withdrawSavings = new WithdrawSavingsStrategy();
         if (withdrawSavings.checkForErrors(input)) {
             return;
         }

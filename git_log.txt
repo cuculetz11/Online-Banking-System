@@ -1,0 +1,53 @@
+commit 18bdb64b865bf83217bdb8542e056dc28a306874
+Author: cuculetz11 <viorel_cosmin.cucu@stud.acs.upb.ro>
+Date:   Mon Jan 20 02:44:02 2025 +0200
+
+    gata cs-ul unde era cod ce se repeta am facut functii astfel incat sa scap de acest lucru
+
+commit e1f8af7a487c56a210475f6ad3c974e00ba38b4c
+Author: cuculetz11 <viorel_cosmin.cucu@stud.acs.upb.ro>
+Date:   Sun Jan 19 00:29:55 2025 +0200
+
+    am terminat de implementat logica, doar ca am un cod cam murdar trebuie sa-l curat de cod redundant, de afisari si poate mai optimzez cate ceva ca m am chnuit rau sa inteleg din refuri cum trebuiau unele chestii implementate si am refacut in graba cateva lucruri
+
+commit 681c12fbc25e6b644cfb2cf321049a4f2ce324fb
+Author: cuculetz11 <viorel_cosmin.cucu@stud.acs.upb.ro>
+Date:   Tue Jan 7 01:37:06 2025 +0200
+
+    de implmentat caschback ul perntu nroftransaction pentruc a l am inteles prostu si de implementat raportul de comercianti pentru business si raportul de spending pentru contri cand  transfera cantre comercianti(daca e valaibil asta) si treaba cu alias. PANA NU SE DAU NIOSTE TESTE FINALE EU NU MAI FAC NMK. FEEDBACK UL O SA FIE EXACT CEL PE CARE L AM DAT SI LA ETAPA1 TREBUIE SA URMARESC REF UL CA SA STIU UNDE SI CUM SI CAND TREBUIE SA AFISEZ/INCLUD
+
+commit 6ff4fd0965aff90fdc2ac2cbb6743b5ddc27cd7c
+Author: cuculetz11 <viorel_cosmin.cucu@stud.acs.upb.ro>
+Date:   Tue Jan 7 00:19:20 2025 +0200
+
+    am implementat putin contul de business(revin in detaliu cand e gata), acum modific cate ceva la cashback pentru ca nu l am inteles ff bine si am gresit implementarea...
+
+commit ee0d52a29d31228a647650a8d4088dc5336f0310
+Author: cuculetz11 <viorel_cosmin.cucu@stud.acs.upb.ro>
+Date:   Sun Jan 5 01:19:26 2025 +0200
+
+    am dacut logica de caschback ce se baseaza pe o clasa ce se afla in UserPlan ce se foloseste de o strategie si un mini factory pentru a verifica, updata si aduga cashback ul. De acum urmeaza splt ul custom
+
+commit d5597fd06e2872324bad4f0f4f92a9ef851a32cb
+Author: cuculetz11 <viorel_cosmin.cucu@stud.acs.upb.ro>
+Date:   Sat Jan 4 02:58:19 2025 +0200
+
+    am facut logica pentru ficare plan, adica fiecar utilizator are ca atribut o clasa de tipul UserPlan ce contine o strategie de comision pentru a returna lejer comsionul pentru suma respectiva carcteristic acelui tip de cont, am facut withdraw pentu saving si acum urmeaza pentru contul classic
+
+commit 6c13195dd2de1c1785f8f37b0b61b80a0a7f7aa0
+Author: cuculetz11 <viorel_cosmin.cucu@stud.acs.upb.ro>
+Date:   Sun Dec 29 13:41:50 2024 +0200
+
+    s
+
+commit ad443a68f8aaf0a69c070dd49d0a13d46e11d16d
+Author: cuculetz11 <viorel_cosmin.cucu@stud.acs.upb.ro>
+Date:   Sun Dec 29 13:40:46 2024 +0200
+
+    am adugat toate fisierele/pachetele din etapa 1
+
+commit 2f14e2f7ad6173e53f462e21a7d0be6355063c52
+Author: cuculetz11 <viorel_cosmin.cucu@stud.acs.upb.ro>
+Date:   Sun Dec 29 13:39:18 2024 +0200
+
+    first commit

@@ -66,12 +66,11 @@ public class BankingServices {
     }
 
     /**
-     *
+     * Adugam fonduri
      */
     public void addFounds(final CommandInput input) {
         Account account = Bank.getInstance().getAccounts().get(input.getAccount());
         if (account == null) {
-            System.err.println("contul nu a fost gasit: " + input.getAccount());
             return;
         }
         account.deposit(input);

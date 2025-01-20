@@ -195,7 +195,8 @@ public class BusinessAccount extends Account {
     }
 
     /**
-     *
+     * Stergem cardul
+     * Tratez situatia in care un employee poate incearca sa stearga un card ce nu ii apartine
      * @param input comanda de input
      */
     @Override
@@ -213,7 +214,7 @@ public class BusinessAccount extends Account {
     }
 
     /**
-     *
+     * Stergem contul(doar ownerul)
      * @param input comanda de input
      */
     @Override

@@ -2,7 +2,7 @@ package org.poo.entities.bankAccount;
 
 import org.poo.command.debug.dto.AccountMerchantsDTO;
 import org.poo.command.debug.dto.DebugActionsDTO;
-import org.poo.entities.Merchant;
+import org.poo.entities.commerciant.Merchant;
 import org.poo.entities.transaction.CardPayment;
 import org.poo.entities.transaction.Transaction;
 import org.poo.fileio.CommandInput;
