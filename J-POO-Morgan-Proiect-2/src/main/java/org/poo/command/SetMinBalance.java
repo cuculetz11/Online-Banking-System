@@ -12,8 +12,7 @@ public class SetMinBalance implements Command {
     @Override
     public void execute(final CommandInput input) {
         Account account = Bank.getInstance().getAccounts().get(input.getAccount());
-        if(account == null){
-            System.out.println("Account not found");
+        if (account == null) {
             return;
         }
        account.setMinBalance(input);

@@ -1,7 +1,6 @@
 package org.poo.entities.card;
 
 import org.poo.command.transaction.CreateCard;
-import org.poo.command.transaction.DeleteCard;
 import org.poo.entities.Bank;
 import org.poo.fileio.CommandInput;
 import org.poo.services.BankingServices;
@@ -36,8 +35,6 @@ public class OneTimePayCard extends Card {
         inputDelete.setTimestamp(Bank.getInstance().getCurrentInput().getTimestamp());
 
 
-//        DeleteCard deleteCard = new DeleteCard();
-//        deleteCard.execute(inputDelete);
         CommandInput input = Bank.getInstance().getCurrentInput();
         BankingServices bankingServices = new BankingServices();
         bankingServices.deleteCard(this.getAccount(), input.getCardNumber());

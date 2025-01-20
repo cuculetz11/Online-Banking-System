@@ -1,7 +1,5 @@
 package org.poo.utils;
 
-import org.poo.command.transaction.UpgradePlan;
-import org.poo.entities.bankAccount.Account;
 import org.poo.entities.transaction.*;
 
 public final class TransactionManager {
@@ -70,32 +68,38 @@ public final class TransactionManager {
                 transaction.addToAccountHistory(datesForTransaction.getIban());
                 break;
             case Constants.SPLIT_PAYMENT_FAILED_TRANSACTION:
-                if(datesForTransaction.getSplitPaymentType().equals("custom")) {
+                if (datesForTransaction.getSplitPaymentType().equals("custom")) {
                     transaction = new ErrorSplitPayment(datesForTransaction.getTimestamp(),
                             datesForTransaction.getCurrency(), datesForTransaction.getAccounts(),
-                            datesForTransaction.getDescription(), datesForTransaction.getSplitPaymentType(),
-                            datesForTransaction.getAmountForUsers(), datesForTransaction.getErrorMessage());
+                            datesForTransaction.getDescription(),
+                            datesForTransaction.getSplitPaymentType(),
+                            datesForTransaction.getAmountForUsers(),
+                            datesForTransaction.getErrorMessage());
                 } else {
                     transaction = new ErrorSplitPaymentEq(datesForTransaction.getTimestamp(),
-                            datesForTransaction.getCurrency(),datesForTransaction.getAccounts(),
-                            datesForTransaction.getDescription(), datesForTransaction.getSplitPaymentType(),
-                            Math.round(datesForTransaction.getAmountForUsers().get(0) * 100) / 100.0, datesForTransaction.getErrorMessage());
+                            datesForTransaction.getCurrency(), datesForTransaction.getAccounts(),
+                            datesForTransaction.getDescription(),
+                            datesForTransaction.getSplitPaymentType(),
+                            datesForTransaction.getAmountForUsers().get(0),
+                            datesForTransaction.getErrorMessage());
                 }
 
                 transaction.addToUserHistory(datesForTransaction.getUserEmail());
                 transaction.addToAccountHistory(datesForTransaction.getIban());
                 break;
             case Constants.SPLIT_PAYMENT_TRANSACTION:
-                if(datesForTransaction.getSplitPaymentType().equals("custom")) {
+                if (datesForTransaction.getSplitPaymentType().equals("custom")) {
                     transaction = new SplitPayment(datesForTransaction.getTimestamp(),
                             datesForTransaction.getCurrency(),
                             datesForTransaction.getAccounts(), datesForTransaction.getDescription(),
-                            datesForTransaction.getSplitPaymentType(), datesForTransaction.getAmountForUsers());
+                            datesForTransaction.getSplitPaymentType(),
+                            datesForTransaction.getAmountForUsers());
                 } else {
                     transaction = new SplitPaymentEq(datesForTransaction.getTimestamp(),
                             datesForTransaction.getCurrency(), datesForTransaction.getAccounts(),
-                            datesForTransaction.getDescription(), datesForTransaction.getSplitPaymentType(),
-                            Math.round(datesForTransaction.getAmountForUsers().get(0) * 100) / 100.0);
+                            datesForTransaction.getDescription(),
+                            datesForTransaction.getSplitPaymentType(),
+                            datesForTransaction.getAmountForUsers().get(0));
                 }
                 transaction.addToUserHistory(datesForTransaction.getUserEmail());
                 transaction.addToAccountHistory(datesForTransaction.getIban());
@@ -119,7 +123,7 @@ public final class TransactionManager {
                 transaction.addToUserHistory(datesForTransaction.getUserEmail());
                 transaction.addToAccountHistory(datesForTransaction.getIban());
                 break;
-            case Constants.Savings_WITHDRAWAL_TRANSACTION:
+            case Constants.SAVINGS_WITHDRAWAL_TRANSACTION:
                 transaction = new SavingsWithdrawal(datesForTransaction.getAccounts().get(0),
                         datesForTransaction.getDescription(),
                         datesForTransaction.getAccounts().get(1),

@@ -4,18 +4,28 @@ import lombok.Getter;
 
 @Getter
 public class PaymentPerWorkerDTO {
-    private String username;
+    private final String username;
     private double spent;
     private double deposited;
-    public PaymentPerWorkerDTO(String name) {
+    public PaymentPerWorkerDTO(final String name) {
         this.username = name;
         spent = 0;
         deposited = 0;
     }
-    public void addSpent(double amount) {
+
+    /**
+     * Adaugam suma data la suma cehltuita
+     * @param amount suma data
+     */
+    public void addSpent(final double amount) {
         spent += amount;
     }
-    public void addDeposited(double amount) {
+
+    /**
+     * Adugam suma data la suma adugata
+     * @param amount suma data
+     */
+    public void addDeposited(final double amount) {
         deposited += amount;
     }
 }

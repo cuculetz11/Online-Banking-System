@@ -31,8 +31,7 @@ public class AddAccount implements Command {
                             .userEmail(userEmail)
                             .build();
             TransactionManager.generateAndAddTransaction(datesForTransaction);
-        } catch (IllegalArgumentException e) {
-            System.err.println("Erroare: " + e.getMessage());
+        } catch (IllegalArgumentException ignored) {
         }
     }
 }

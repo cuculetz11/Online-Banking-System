@@ -6,7 +6,9 @@
     <option name="thirdPartyClasspath">
       <option value="$PROJECT_DIR$/src/main/resources/checkstyle-10.20.1-all.jar" />
     </option>
-    <option name="activeLocationIds" />
+    <option name="activeLocationIds">
+      <option value="90592d2c-babd-4257-8dcf-2f63a3cdd1a1" />
+    </option>
     <option name="locations">
       <list>
         <ConfigurationLocation id="bundled-sun-checks" type="BUNDLED" scope="All" description="Sun Checks">(bundled)</ConfigurationLocation>

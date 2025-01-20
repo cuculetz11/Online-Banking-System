@@ -5,10 +5,7 @@ import org.poo.entities.Bank;
 import org.poo.entities.bankAccount.Account;
 import org.poo.entities.card.Card;
 import org.poo.fileio.CommandInput;
-import org.poo.utils.Constants;
-import org.poo.utils.DatesForTransaction;
 import org.poo.utils.ErrorManager;
-import org.poo.utils.TransactionManager;
 
 public class DeleteCard implements Command {
     /**
@@ -32,13 +29,11 @@ public class DeleteCard implements Command {
             if (cardHolder == null) {
                 throw new IllegalArgumentException("Contul nu exista: " + input.getCardNumber());
             }
-            if(!cardHolder.checkPropriety(input.getEmail())) {
-                System.out.println("proprietate proasta");
+            if (cardHolder.checkPropriety(input.getEmail())) {
                 return;
             }
             cardHolder.deleteCard(input);
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
+        } catch (Exception ignored) {
         }
     }
 }

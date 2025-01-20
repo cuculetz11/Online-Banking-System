@@ -15,13 +15,22 @@ import org.poo.utils.TransactionManager;
 public class WithdrawCashAction implements PaymentStrategy {
     private Account cardAccount;
     private double amount;
+
+    /**
+     * Scoatem banii cu tot cu comision
+     */
     @Override
     public void pay() {
         cardAccount.pay(amount);
     }
 
+    /**
+     * Verifica daca se poate efectua scoaterea
+     * @param input data necesare pentru verificare
+     * @return fals daca se poate, adevarat altfel
+     */
     @Override
-    public boolean checkForErrors(CommandInput input) {
+    public boolean checkForErrors(final CommandInput input) {
         try {
             Card card = Bank.getInstance().getCards().get(input.getCardNumber());
             if (card == null) {
@@ -32,39 +41,45 @@ public class WithdrawCashAction implements PaymentStrategy {
             this.cardAccount = card.getAccount();
             User user = Bank.getInstance().getUsers().get(input.getEmail());
             if (user == null) {
-                ErrorManager.notFound(Constants.USER_NOT_FOUND, input.getCommand(), input.getTimestamp());
+                ErrorManager.notFound(Constants.USER_NOT_FOUND, input.getCommand(),
+                        input.getTimestamp());
                 return true;
             }
-            if(!cardAccount.checkPropriety(input.getEmail())) {
-                ErrorManager.notFound(Constants.CARD_NOT_FOUND, input.getCommand(), input.getTimestamp());
+            if (cardAccount.checkPropriety(input.getEmail())) {
+                ErrorManager.notFound(Constants.CARD_NOT_FOUND, input.getCommand(),
+                        input.getTimestamp());
                 return true;
             }
-            if(card.getStatus().equals("frozen")) {
-                System.out.println("problem");
+            if (card.getStatus().equals("frozen")) {
                 return true;
             }
-            this.amount = CURRENCY_EXCHANGE_SERVICE.exchangeCurrency(new CurrencyPair("RON", cardAccount.getCurrency()), input.getAmount());
+            this.amount = CURRENCY_EXCHANGE_SERVICE.exchangeCurrency(
+                    new CurrencyPair("RON", cardAccount.getCurrency()), input.getAmount());
 
-            if(cardAccount.isTransferPossible(amount).equals(Constants.TRANSACTION_IMPOSSIBLE)) {
+            if (cardAccount.isTransferPossible(amount).equals(Constants.TRANSACTION_IMPOSSIBLE)) {
                 DatesForTransaction datesForTransaction =
                         new DatesForTransaction.Builder(Constants.INSUFFICIENT_FUNDS,
                                 input.getTimestamp())
-                                .transactionName(Constants.INSUFFICIENT_FUNDS_PAY_ONLINE_TRANSACTION)
+                                .transactionName(
+                                        Constants.INSUFFICIENT_FUNDS_PAY_ONLINE_TRANSACTION)
                                 .userEmail(input.getEmail())
                                 .build();
                 TransactionManager.generateAndAddTransaction(datesForTransaction);
                 return true;
             }
-            if(cardAccount.isTransferPossible(amount).equals(Constants.LIMIT_EXCEEDED)) {
+            if (cardAccount.isTransferPossible(amount).equals(Constants.LIMIT_EXCEEDED)) {
                 System.out.println("withdrow limit");
                 return true;
             }
-            if(this.cardAccount.getMinimumBalance() >= cardAccount.getBalance() - this.amount - cardAccount.getUser().getPlan().getCommissionPlan().commission(amount, cardAccount.getCurrency())) {
+            if (this.cardAccount.getMinimumBalance() >= cardAccount.getBalance()
+                    - this.amount - cardAccount.getUser().getPlan().getCommissionPlan()
+                    .commission(amount, cardAccount.getCurrency())) {
                 System.out.println("Cannot perform payment due to a minimum balance being se");
                 return true;
             }
             DatesForTransaction datesForTransaction =
-                    new DatesForTransaction.Builder("Cash withdrawal of " + String.valueOf(input.getAmount()),
+                    new DatesForTransaction.Builder("Cash withdrawal of "
+                            + String.valueOf(input.getAmount()),
                             input.getTimestamp())
                             .transactionName(Constants.CASH_WITHDRAWAL_TRANSACTION)
                             .userEmail(input.getEmail())

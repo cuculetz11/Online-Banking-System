@@ -1,9 +1,15 @@
 package org.poo.services.commmissionService;
 
-public class CommissionFactory {
-    private CommissionFactory() {}
+public final class CommissionFactory {
+    private CommissionFactory() { }
 
-    public static CommissionPlan createCommissionPlan(String userPlan) {
+    /**\
+     * In functie de ce tip de plan are se creeaza un obiect de tip "CommisionPlan"
+     * Acest obiect aplica comisionul specific pe tranzactie
+     * @param userPlan planul userului
+     * @return un obiect ce aplica foarte usor comisionul
+     */
+    public static CommissionPlan createCommissionPlan(final String userPlan) {
         return switch (userPlan) {
             case "student", "gold" -> new NoCommission();
             case "silver" -> new SilverCommission();

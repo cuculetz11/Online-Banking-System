@@ -42,8 +42,7 @@ public class CreateCard implements Command {
                         .userEmail(input.getEmail())
                         .build();
         TransactionManager.generateAndAddTransaction(datesForTransaction);
-        } catch (IllegalArgumentException e) {
-            System.err.println("Erroare: " + e.getMessage());
+        } catch (IllegalArgumentException ignored) {
         }
     }
 }

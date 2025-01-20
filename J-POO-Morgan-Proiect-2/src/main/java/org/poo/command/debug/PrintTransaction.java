@@ -16,11 +16,10 @@ public class PrintTransaction implements Command {
      */
     @Override
     public void execute(final CommandInput input) {
-
         ArrayList<Transaction> transactions = Bank.getInstance().getTransactionHistory()
                 .get(input.getEmail());
         transactions.sort((t1, t2) -> Integer.compare(t1.getTimestamp(), t2.getTimestamp()));
-        DebugDTO<Transaction> printTransaction = new DebugDTO<Transaction>(input.getCommand(),
+        DebugDTO<Transaction> printTransaction = new DebugDTO<>(input.getCommand(),
                 transactions, input.getTimestamp());
         JsonOutManager.getInstance().addToOutput(printTransaction);
     }

@@ -3,9 +3,11 @@ package org.poo.services.commmissionService;
 import org.poo.utils.Constants;
 
 public class StandardCommission implements CommissionPlan {
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public double commission(double amount, String currency) {
-        return (Constants.STANDARD_COMMISSION * amount / 100);
+    public double commission(final double amount, final String currency) {
+        return (Constants.STANDARD_COMMISSION * amount / Constants.PROCENT);
     }
 }

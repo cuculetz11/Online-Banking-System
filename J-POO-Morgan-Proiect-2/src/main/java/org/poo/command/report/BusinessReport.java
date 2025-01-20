@@ -6,13 +6,14 @@ import org.poo.entities.bankAccount.Account;
 import org.poo.fileio.CommandInput;
 import org.poo.utils.Constants;
 import org.poo.utils.ErrorManager;
-import org.poo.utils.observer.CheckAccountsPrecision;
 
 public class BusinessReport implements Command {
+    /**
+     * Raport specific pentru business
+     * @param input obiectul ce contine informatiile ncesare pentru a efectua comanda
+     */
     @Override
-    public void execute(CommandInput input) {
-//        CheckAccountsPrecision checkAccountsPrecision = new CheckAccountsPrecision();
-//        BANKING_SERVICES.acceptVisitor(checkAccountsPrecision);
+    public void execute(final CommandInput input) {
         Account account = Bank.getInstance().getAccounts().get(input.getAccount());
         if (account == null) {
             ErrorManager.notFound(Constants.ACCOUNT_NOT_FOUND, input.getCommand(),

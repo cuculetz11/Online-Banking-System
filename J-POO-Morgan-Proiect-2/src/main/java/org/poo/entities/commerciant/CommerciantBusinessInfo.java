@@ -9,7 +9,8 @@ public class CommerciantBusinessInfo {
     private double amount;
     private String commerciantName;
 
-    public CommerciantBusinessInfo(int timestamp, String userEmail, double amount, String commerciantName) {
+    public CommerciantBusinessInfo(final int timestamp, final String userEmail,
+                                   final double amount, final String commerciantName) {
         this.timestamp = timestamp;
         this.userEmail = userEmail;
         this.amount = amount;

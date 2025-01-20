@@ -5,27 +5,32 @@ import org.poo.entities.Bank;
 import org.poo.entities.bankAccount.Account;
 import org.poo.entities.bankAccount.BusinessAccount;
 import org.poo.fileio.CommandInput;
+import org.poo.utils.Constants;
 
 public class AddNewBusinessAssociate implements Command {
+    /**
+     * Adaugam un nou asociat in contul de business dat
+     * Se verifica daca acesta este deja in firma
+     * @param input obiectul ce contine informatiile ncesare pentru a efectua comanda
+     */
     @Override
-    public void execute(CommandInput input) {
+    public void execute(final CommandInput input) {
         Account account = Bank.getInstance().getAccounts().get(input.getAccount());
-        if(account == null) {
-            System.out.println("Account not found");
+        if (account == null) {
             return;
         }
-        if(!account.getType().equals("business")) {
-            System.out.println("Account type is not business");
+        if (!account.getType().equals(Constants.BUSINESS)) {
             return;
         }
         BusinessAccount businessAccount = (BusinessAccount) account;
-        if(businessAccount.getUser().getEmail().equals(input.getEmail()) || businessAccount.getManagers().contains(input.getEmail()) || businessAccount.getEmployees().contains(input.getEmail())) {
-            System.out.println("Account already exists");
+        if (businessAccount.getUser().getEmail().equals(input.getEmail())
+                || businessAccount.getManagers().contains(input.getEmail())
+                || businessAccount.getEmployees().contains(input.getEmail())) {
             return;
         }
-        if(input.getRole().equals("manager")) {
+        if (input.getRole().equals(Constants.MANAGER)) {
             businessAccount.getManagers().add(input.getEmail());
-        } else if(input.getRole().equals("employee")) {
+        } else if (input.getRole().equals(Constants.EMPLOYEE)) {
             businessAccount.getEmployees().add(input.getEmail());
         }
     }

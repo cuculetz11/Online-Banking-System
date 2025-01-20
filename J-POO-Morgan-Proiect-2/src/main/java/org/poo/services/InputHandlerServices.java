@@ -15,7 +15,8 @@ public class InputHandlerServices {
      * Ia toate datele de intrare si incepe executia comenzilor
      */
     public void handle() {
-        Initializator initializator = new Initializator(input.getUsers(), input.getExchangeRates(), input.getCommerciants());
+        Initializator initializator = new Initializator(input.getUsers(), input.getExchangeRates(),
+                input.getCommerciants());
         initializator.initialize();
         BankingServices bankingServices = new BankingServices();
         for (CommandInput commandInput : input.getCommands()) {

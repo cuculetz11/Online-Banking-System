@@ -29,7 +29,7 @@ public final  class Constants {
     public static final String CHANGE_DEPOSIT_LIMIT = "changeDepositLimit";
     public static final String BUSINESS_REPORT = "businessReport";
     public static final String TRANSACTION = "transaction";
-    public static final String COMMERCIANT ="commerciant";
+    public static final String COMMERCIANT = "commerciant";
     public static final String REJECT_SPLITPAYMENT = "rejectSplitPayment";
     //------------------------------
     public static final String COMMAND_NOT_FOUND_ERROR = "Command not found";
@@ -64,7 +64,29 @@ public final  class Constants {
     public static final String TRANSACTION_IMPOSSIBLE = "Transaction impossible";
     public static final String LIMIT_EXCEEDED = "Limit exceeded";
     public static final String SAVINGS_WITHDRAWAL = "Savings withdrawal";
-
+    public static final String MANAGER = "manager";
+    public static final String EMPLOYEE = "employee";
+    public static final String BUSINESS = "business";
+    public static final String THIS_IS_NOT_A_BUSINESS_ACCOUNT = "This is not a business account";
+    public static final String YOU_MUST_BE_OWNER_DEPOSIT =
+            "You must be owner in order to change deposit limit.";
+    public static final Double INITIAL_LIMIT = 500.0;
+    public static final String YOU_MUST_BE_OWNER_SPENDING =
+            "You must be owner in order to change spending limit.";
+    public static final String CANNOT_DOWNGRADE =
+            "You cannot downgrade your plan";
+    public static final int STANDARD_GOLD = 350;
+    public static final int STANDARD_SILVER = 100;
+    public static final int SILVER_GOLD = 250;
+    public static final String SILVER = "silver";
+    public static final int AUTO_UPGRADE_LIMIT = 300;
+    public static final int AUTO_UPGRADE_NR_TRANSACTION = 5;
+    public static final int PROCENT = 100;
+    public static final int FIRST_THRESHOLD = 100;
+    public static final int SECOND_THRESHOLD = 300;
+    public static final int THIRD_THRESHOLD = 500;
+    public static final int SILVER_COMMISSION_LIMIT = 500;
+    public static final int MINIMUM_AGE = 21;
     //---------------------------
     public static final String ADD_ACCOUNT_TRANSACTION =
             "AddAccountTransaction";
@@ -94,7 +116,7 @@ public final  class Constants {
             "CheckCardTransaction";
     public static final String CASH_WITHDRAWAL_TRANSACTION =
             "CashWithdrawalTransaction";
-    public static final String Savings_WITHDRAWAL_TRANSACTION =
+    public static final String SAVINGS_WITHDRAWAL_TRANSACTION =
             "SavingsWithdrawalTransaction";
     public static final String MIN_AGE_TRANSACTION = "MinAgeTransaction";
     public static final String PLAN_ALREADY_TRANSACTION = "PlanAlreadyTransaction";

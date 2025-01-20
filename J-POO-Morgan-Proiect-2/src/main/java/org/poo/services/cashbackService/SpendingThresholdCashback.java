@@ -4,10 +4,11 @@ import org.poo.entities.CurrencyPair;
 import org.poo.entities.bankAccount.Account;
 import org.poo.entities.commerciant.Commerciant;
 import org.poo.services.CurrencyExchangeService;
+import org.poo.utils.Constants;
 
 import java.util.Map;
 
-public class SpendingThresholdCashback implements CashbackStrategy{
+public class SpendingThresholdCashback implements CashbackStrategy {
     private final  Map<Integer, Map<String, Double>> cashbackRates = Map.of(
             100, Map.of(
                     "standard", 0.1,
@@ -35,38 +36,55 @@ public class SpendingThresholdCashback implements CashbackStrategy{
     private final double transactionAmount;
     private String accountCurrency;
 
-    public SpendingThresholdCashback(String userPlanType, double transactionAmount) {
+    public SpendingThresholdCashback(final String userPlanType, final double transactionAmount) {
         this.userPlanType = userPlanType;
         this.transactionAmount = transactionAmount;
     }
+
+    /**
+     * {@inheritDoc}
+     * @param commerciant comerciantul pentru care se face tranzactia
+     * @param account contul clientului
+     * @return fals daca se poate, adevarat altfel
+     */
     @Override
-    public boolean check(Commerciant commerciant, Account account) {
+    public boolean check(final Commerciant commerciant, final Account account) {
         accountCurrency = account.getCurrency();
         double amount = account.getCashbackSpending();
-        if(amount < 100) {
+        if (amount < Constants.FIRST_THRESHOLD) {
             return true;
         }
-        if(amount >= 100 && amount < 300) {
-            threshold = 100;
-        } else if(amount >= 300 && amount < 500) {
-            threshold = 300;
-        } else if(amount >= 500) {
-            threshold = 500;
+        if (amount >= Constants.FIRST_THRESHOLD && amount < Constants.SECOND_THRESHOLD) {
+            threshold = Constants.FIRST_THRESHOLD;
+        } else if (amount >= Constants.SECOND_THRESHOLD && amount < Constants.THIRD_THRESHOLD) {
+            threshold = Constants.SECOND_THRESHOLD;
+        } else if (amount >= Constants.THIRD_THRESHOLD) {
+            threshold = Constants.THIRD_THRESHOLD;
         }
 
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     * @return cashback-ul
+     */
     @Override
     public double getCashback() {
-        double cashback = cashbackRates.get(threshold).get(userPlanType) * transactionAmount / 100;
+        double cashback = cashbackRates.get(threshold).get(userPlanType)
+                * transactionAmount / Constants.PROCENT;
         CurrencyExchangeService currencyExchangeService = new CurrencyExchangeService();
-        cashback = currencyExchangeService.exchangeCurrency(new CurrencyPair("RON", accountCurrency), cashback);
+        cashback = currencyExchangeService.exchangeCurrency(
+                new CurrencyPair("RON", accountCurrency), cashback);
         return cashback;
     }
 
+    /**
+     * {@inheritDoc}
+     * @param account contul ce a efectuat tranzactia
+     */
     @Override
-    public void updateCashback(Account account) {
+    public void updateCashback(final Account account) {
         account.setCashbackSpending(account.getCashbackSpending() + transactionAmount);
     }
 }

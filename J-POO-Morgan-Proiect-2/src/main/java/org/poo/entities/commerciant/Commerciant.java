@@ -10,7 +10,7 @@ public class Commerciant {
     private String account;
     private String cashbackStrategy;
     private String type;
-    public Commerciant(CommerciantInput commerciantInput) {
+    public Commerciant(final CommerciantInput commerciantInput) {
         this.id = commerciantInput.getId();
         this.commerciant = commerciantInput.getCommerciant();
         this.account = commerciantInput.getAccount();

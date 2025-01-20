@@ -8,22 +8,27 @@ import java.util.List;
 public class BusinessReportTransaction {
     @JsonProperty("IBAN")
     private String iban;
-    private double balance;
-    private String currency;
+    private final double balance;
+    private final String currency;
     @JsonProperty("spending limit")
     private double payLimit;
     @JsonProperty("deposit limit")
     private double depositLimit;
     @JsonProperty("statistics type")
     private String type;
-    private List<PaymentPerWorkerDTO> managers;
-    private List<PaymentPerWorkerDTO> employees;
+    private final List<PaymentPerWorkerDTO> managers;
+    private final List<PaymentPerWorkerDTO> employees;
     @JsonProperty("total spent")
-    private double total_spent;
+    private final double totalSpent;
     @JsonProperty("total deposited")
-    private double total_deposit;
+    private final double totalDeposit;
 
-    public BusinessReportTransaction(String iban, String type, double balance, String currency, double payLimit, double depositLimit, List<PaymentPerWorkerDTO> managers, List<PaymentPerWorkerDTO> employees, double total_spent, double total_deposit) {
+    public BusinessReportTransaction(final String iban, final String type, final double balance,
+                                     final String currency, final double payLimit,
+                                     final double depositLimit,
+                                     final List<PaymentPerWorkerDTO> managers,
+                                     final List<PaymentPerWorkerDTO> employees,
+                                     final double totalSpent, final double totalDeposit) {
         this.iban = iban;
         this.balance = balance;
         this.currency = currency;
@@ -31,8 +36,8 @@ public class BusinessReportTransaction {
         this.depositLimit = depositLimit;
         this.managers = managers;
         this.employees = employees;
-        this.total_spent = total_spent;
-        this.total_deposit = total_deposit;
+        this.totalSpent = totalSpent;
+        this.totalDeposit = totalDeposit;
         this.type = type;
     }
 }

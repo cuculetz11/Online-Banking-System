@@ -13,7 +13,8 @@ public class Initializator {
     private final ExchangeInput[] exchangeInputs;
     private final CommerciantInput[] commerciantInputs;
 
-    public Initializator(final UserInput[] userInputs, final ExchangeInput[] exchangeInputs, final CommerciantInput[] commerciantInputs) {
+    public Initializator(final UserInput[] userInputs, final ExchangeInput[] exchangeInputs,
+                         final CommerciantInput[] commerciantInputs) {
         this.userInputs = userInputs;
         this.exchangeInputs = exchangeInputs;
         this.commerciantInputs = commerciantInputs;

@@ -1,7 +1,6 @@
 package org.poo.command.transaction;
 
 import org.poo.command.Command;
-import org.poo.entities.Bank;
 import org.poo.fileio.CommandInput;
 import org.poo.services.BankMethods;
 import org.poo.services.payment.CardPaymentStrategy;

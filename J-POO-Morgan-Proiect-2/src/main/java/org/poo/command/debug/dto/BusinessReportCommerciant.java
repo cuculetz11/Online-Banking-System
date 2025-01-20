@@ -2,27 +2,29 @@ package org.poo.command.debug.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
-import org.poo.entities.Merchant;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 public class BusinessReportCommerciant {
     @JsonProperty("IBAN")
     private String iban;
-    private double balance;
-    private String currency;
+    private final double balance;
+    private final  String currency;
     @JsonProperty("spending limit")
     private double payLimit;
     @JsonProperty("deposit limit")
     private double depositLimit;
-    private List<CommerciantDTO> commerciants;
+    private final List<CommerciantDTO> commerciants;
     @JsonProperty("statistics type")
     private String type;
 
 
-    public BusinessReportCommerciant(String iban, double balance, String currency, double payLimit, double depositLimit, List<CommerciantDTO> commerciants, String type) {
+    public BusinessReportCommerciant(final String iban, final double balance,
+                                     final String currency, final double payLimit,
+                                     final double depositLimit,
+                                     final List<CommerciantDTO> commerciants,
+                                     final String type) {
         this.iban = iban;
         this.balance = balance;
         this.currency = currency;

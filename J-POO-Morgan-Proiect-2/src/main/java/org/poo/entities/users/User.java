@@ -6,13 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.poo.entities.bankAccount.Account;
 import org.poo.fileio.UserInput;
-import org.poo.services.splitPayment.WaitingSplitPayment;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
+import java.util.*;
 
 @Setter
 @Getter

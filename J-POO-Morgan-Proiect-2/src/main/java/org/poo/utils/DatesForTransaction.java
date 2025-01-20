@@ -97,6 +97,11 @@ public class DatesForTransaction {
             return this;
         }
 
+        /**
+         * Seteaza planul nou
+         * @param newPlanType1 planul nou
+         * @return nstanta curenta a builder-ului pentru a face acel lant
+         */
         public Builder newPlanType(final String newPlanType1) {
             this.newPlanType = newPlanType1;
             return this;
@@ -229,11 +234,22 @@ public class DatesForTransaction {
             this.accountsList = accountsList1;
             return this;
         }
+
+        /**
+         * Seteaza suma pentru primul user
+         * @param amountForUsers1 suma pentru primul user
+         * @return nstanta curenta a builder-ului pentru a face acel lant
+         */
         public Builder amountForUsers(final List<Double> amountForUsers1) {
             this.amountForUsers = amountForUsers1;
             return this;
         }
 
+        /**
+         * Seteaza tipul de split payment
+         * @param splitPaymentType1 tipul de split payment
+         * @return nstanta curenta a builder-ului pentru a face acel lant
+         */
         public Builder splitPaymentType(final String splitPaymentType1) {
             this.splitPaymentType = splitPaymentType1;
             return this;

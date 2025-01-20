@@ -8,12 +8,16 @@ import org.poo.services.BankMethods;
 public class CommerciantInitialize implements BankMethods {
     private CommerciantInput[] commerciantInputs;
 
-    public CommerciantInitialize(CommerciantInput[] commerciantInputs) {
+    public CommerciantInitialize(final CommerciantInput[] commerciantInputs) {
         this.commerciantInputs = commerciantInputs;
     }
 
+    /**
+     * Viziteaza banca pentru a initializa comerciantii
+     * @param bank banca ca parametru
+     */
     @Override
-    public void visit(Bank bank) {
+    public void visit(final Bank bank) {
         for (CommerciantInput commerciantInput : commerciantInputs) {
             Commerciant commerciant = new Commerciant(commerciantInput);
             bank.getCommerciants().put(commerciant.getCommerciant(), commerciant);

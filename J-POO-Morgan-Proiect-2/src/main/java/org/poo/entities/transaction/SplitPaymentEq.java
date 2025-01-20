@@ -13,7 +13,7 @@ public class SplitPaymentEq extends Transaction {
 
     public SplitPaymentEq(final int timestamp, final String currency,
                         final List<String> involvedAccounts, final String description,
-                        final String splitPaymentType, double amount) {
+                        final String splitPaymentType, final double amount) {
         super(timestamp, description);
         this.currency = currency;
         this.involvedAccounts = involvedAccounts;
